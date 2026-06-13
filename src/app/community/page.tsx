@@ -99,7 +99,7 @@ export default function CommunityPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-6">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-4 lg:px-6 py-6">
         <div className="mb-6 border-b border-white/[0.05] pb-4">
           <h1 className="text-2xl font-black tracking-tight text-white uppercase">커뮤니티</h1>
           <p className="text-xs sm:text-sm text-zinc-500 mt-1 font-bold">공장별 렙 분석 정보, 후기, 세관/배송 고민 등 레플리카 매니아들의 은밀한 대화방.</p>
@@ -143,18 +143,57 @@ export default function CommunityPage() {
               ))}
             </div>
 
-            {/* Post Listings (DCInside Table Style) */}
+            {/* Post Listings (Optimized Responsive Layout) */}
             <div className="glass rounded-2xl overflow-hidden border border-white/[0.05] bg-[#111111]/30 shadow-xl">
-              <div className="overflow-x-auto">
-                <table className="w-full table-fixed border-collapse text-left">
+              {/* Mobile View: Vertical list cards to prevent table sizing and clipping bugs */}
+              <div className="block sm:hidden divide-y divide-white/[0.04] text-[11px] font-bold">
+                {paginatedPosts.map((post) => (
+                  <div key={post.id} className="px-3 py-3 hover:bg-white/[0.02] transition-colors group">
+                    <div className="flex items-center gap-1 min-w-0 w-full mb-1">
+                      <span className={`text-[8px] font-black px-1.5 py-0.5 rounded border border-white/[0.03] shrink-0 ${categoryColors[post.category] || "bg-zinc-800 text-zinc-300"}`}>
+                        {post.category}
+                      </span>
+                      {post.hot && <Flame size={11} className="text-orange-400 shrink-0" />}
+                      <Link 
+                        href={`/community/${post.id}`} 
+                        className="text-zinc-200 hover:text-gold font-semibold transition-colors truncate min-w-0 flex-1 text-[11px] leading-tight"
+                      >
+                        {post.title}
+                      </Link>
+                      {post.comments > 0 && (
+                        <span className="text-[9px] text-red-400 font-black shrink-0">
+                          [{post.comments}]
+                        </span>
+                      )}
+                      {post.hasImage && (
+                        <ImageIcon size={11} className="text-zinc-500 shrink-0 ml-0.5" />
+                      )}
+                    </div>
+                    {/* Mobile Info row */}
+                    <div className="flex items-center flex-wrap gap-1.5 text-[8.5px] text-zinc-500 font-bold">
+                      <span>{post.author}</span>
+                      <span>•</span>
+                      <span>{post.time}</span>
+                      <span>•</span>
+                      <span>조회 {post.views}</span>
+                      <span>•</span>
+                      <span className="text-gold">추천 {post.likes}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Desktop View: Full size table */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full border-collapse text-left">
                   <thead>
                     <tr className="border-b border-white/[0.08] bg-white/[0.02] text-[11px] font-black text-zinc-400 uppercase tracking-wider">
-                      <th className="py-3 px-4 text-center w-16 hidden sm:table-cell">번호</th>
+                      <th className="py-3 px-4 text-center w-16">번호</th>
                       <th className="py-3 px-4">제목</th>
-                      <th className="py-3 px-4 text-center w-24 hidden sm:table-cell">글쓴이</th>
-                      <th className="py-3 px-4 text-center w-20 hidden sm:table-cell">작성일</th>
-                      <th className="py-3 px-4 text-center w-16 hidden sm:table-cell">조회</th>
-                      <th className="py-3 px-4 text-center w-16 hidden sm:table-cell">추천</th>
+                      <th className="py-3 px-4 text-center w-24">글쓴이</th>
+                      <th className="py-3 px-4 text-center w-20">작성일</th>
+                      <th className="py-3 px-4 text-center w-16">조회</th>
+                      <th className="py-3 px-4 text-center w-16">추천</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-white/[0.04] text-xs font-bold">
@@ -162,19 +201,19 @@ export default function CommunityPage() {
                       {paginatedPosts.map((post) => (
                         <tr key={post.id} className="hover:bg-white/[0.02] transition-colors group">
                           {/* 번호 */}
-                          <td className="py-3 px-4 text-center text-zinc-500 hidden sm:table-cell">
+                          <td className="py-3 px-4 text-center text-zinc-500">
                             {post.id}
                           </td>
                           {/* 제목 */}
-                          <td className="py-3 px-4 min-w-0">
-                            <div className="flex items-center gap-1.5 min-w-0 w-full">
-                              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded border border-white/[0.03] shrink-0 ${categoryColors[post.category] || "bg-zinc-800 text-zinc-300"}`}>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center gap-1.5">
+                              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded border border-white/[0.03] ${categoryColors[post.category] || "bg-zinc-800 text-zinc-300"}`}>
                                 {post.category}
                               </span>
                               {post.hot && <Flame size={12} className="text-orange-400 shrink-0" />}
                               <Link 
                                 href={`/community/${post.id}`} 
-                                className="text-zinc-200 hover:text-gold font-bold transition-colors truncate min-w-0 flex-1"
+                                className="text-zinc-200 hover:text-gold font-bold transition-colors truncate max-w-[420px]"
                               >
                                 {post.title}
                               </Link>
@@ -187,32 +226,21 @@ export default function CommunityPage() {
                                 <ImageIcon size={12} className="text-zinc-500 shrink-0 ml-1" />
                               )}
                             </div>
-                            
-                            {/* Mobile Info row */}
-                            <div className="sm:hidden flex items-center flex-wrap gap-2 mt-1.5 text-[9px] text-zinc-500 font-bold">
-                              <span>{post.author}</span>
-                              <span>•</span>
-                              <span>{post.time}</span>
-                              <span>•</span>
-                              <span>조회 {post.views}</span>
-                              <span>•</span>
-                              <span className="text-gold">추천 {post.likes}</span>
-                            </div>
                           </td>
                           {/* 글쓴이 */}
-                          <td className="py-3 px-4 text-center text-zinc-400 hidden sm:table-cell font-medium truncate max-w-[100px]">
+                          <td className="py-3 px-4 text-center text-zinc-400 font-medium truncate max-w-[100px]">
                             {post.author}
                           </td>
                           {/* 작성일 */}
-                          <td className="py-3 px-4 text-center text-zinc-500 hidden sm:table-cell font-medium">
+                          <td className="py-3 px-4 text-center text-zinc-500 font-medium">
                             {post.time}
                           </td>
                           {/* 조회수 */}
-                          <td className="py-3 px-4 text-center text-zinc-500 hidden sm:table-cell font-medium">
+                          <td className="py-3 px-4 text-center text-zinc-500 font-medium">
                             {post.views}
                           </td>
                           {/* 추천수 */}
-                          <td className="py-3 px-4 text-center text-gold hidden sm:table-cell font-black">
+                          <td className="py-3 px-4 text-center text-gold font-black">
                             {post.likes}
                           </td>
                         </tr>
@@ -275,11 +303,11 @@ export default function CommunityPage() {
             )}
 
             {/* Centered Board Search (실제 필터링 작동) */}
-            <form onSubmit={handleSearchSubmit} className="flex items-center justify-center gap-1.5 mt-6 max-w-md mx-auto">
+            <form onSubmit={handleSearchSubmit} className="flex items-center justify-center gap-1 mt-6 w-full max-w-md mx-auto px-1">
               <select 
                 value={searchType}
                 onChange={(e) => setSearchType(e.target.value)}
-                className="h-9 px-3 bg-[#111111] border border-white/[0.08] rounded-xl text-xs text-white focus:outline-none focus:border-gold/30 font-black cursor-pointer"
+                className="h-9 px-2.5 bg-[#111111] border border-white/[0.08] rounded-xl text-[11px] text-white focus:outline-none focus:border-gold/30 font-black cursor-pointer"
               >
                 <option value="제목+내용" className="bg-[#111111] text-white">제목+내용</option>
                 <option value="제목" className="bg-[#111111] text-white">제목</option>
@@ -292,7 +320,7 @@ export default function CommunityPage() {
                   placeholder="검색어를 입력하세요..." 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-9 pl-3 pr-9 bg-white/[0.03] border border-white/[0.08] rounded-xl text-xs placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 transition-colors font-bold text-white" 
+                  className="w-full h-9 pl-3 pr-9 bg-white/[0.03] border border-white/[0.08] rounded-xl text-[11px] placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 transition-colors font-medium text-white" 
                 />
                 <button type="submit" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-gold transition-colors" aria-label="검색">
                   <Search size={14} />

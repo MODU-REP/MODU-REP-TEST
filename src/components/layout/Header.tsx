@@ -26,7 +26,7 @@ export function Header() {
       <div className="max-w-[1400px] mx-auto px-4 lg:px-6">
         <div className="flex items-center justify-between h-14 lg:h-16">
           {/* Left: Menu + Logo */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-zinc-400 hover:text-white transition-colors"
@@ -41,7 +41,7 @@ export function Header() {
                 alt="MODUREP 모두의 렙"
                 width={240}
                 height={94}
-                className="h-[25px] lg:h-[32px] w-auto object-contain"
+                className="h-[22px] sm:h-[25px] lg:h-[32px] w-auto object-contain"
                 priority
               />
             </Link>
