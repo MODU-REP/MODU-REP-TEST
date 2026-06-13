@@ -110,33 +110,39 @@ export default function BrandsPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold">브랜드 목록</h1>
-          <p className="text-sm text-zinc-500 mt-1">인기 브랜드별 모델 정보와 QC 데이터를 확인하세요.</p>
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-4 lg:px-6 py-6">
+        <div className="mb-6 border-b border-white/[0.05] pb-4">
+          <h1 className="text-2xl font-black tracking-tight text-white uppercase">브랜드 목록</h1>
+          <p className="text-xs sm:text-sm text-zinc-500 mt-1 font-bold">인기 브랜드별 모델 정보와 QC 데이터를 확인하세요.</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-6">
-          <div className="relative w-full sm:w-72">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
-            <input
-              type="text"
-              placeholder="브랜드 검색..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-10 pl-9 pr-4 bg-white/[0.05] border border-white/[0.08] rounded-lg text-sm placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 transition-colors"
-            />
-          </div>
-          <div className="flex gap-1.5">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setCategory(cat)}
-                className={`px-4 py-2 text-sm rounded-full transition-all ${category === cat ? "bg-gold text-black font-bold" : "bg-white/[0.04] text-zinc-400 hover:bg-white/[0.08] border border-white/[0.06]"}`}
-              >
-                {cat}
-              </button>
-            ))}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6 border-b border-white/[0.04] pb-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
+            <div className="relative w-full sm:w-72">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+              <input
+                type="text"
+                placeholder="브랜드 검색..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full h-9 pl-9 pr-4 bg-[#111111] border border-white/[0.08] rounded-xl text-[11px] placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 transition-colors font-medium text-white"
+              />
+            </div>
+            <div className="flex gap-1.5 flex-wrap">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setCategory(cat)}
+                  className={`px-3 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-bold rounded-full transition-all duration-200 ${
+                    category === cat 
+                      ? "bg-gold text-black font-bold" 
+                      : "bg-white/[0.02] text-zinc-400 hover:bg-white/[0.05] hover:text-white border border-white/[0.04]"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -153,8 +159,8 @@ export default function BrandsPage() {
                   <img src={brand.image} alt={brand.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   <div className="absolute bottom-3 left-3">
-                    <p className="text-lg font-bold">{brand.name}</p>
-                    <p className="text-xs text-zinc-400">{brand.nameKr}</p>
+                    <p className="text-lg font-black text-white group-hover:text-gold transition-colors">{brand.name}</p>
+                    <p className="text-xs text-zinc-400 font-bold">{brand.nameKr}</p>
                   </div>
                   <span className="absolute top-3 right-3 text-[10px] px-2 py-0.5 rounded-full bg-gold/20 text-gold font-semibold">{brand.category}</span>
                 </div>

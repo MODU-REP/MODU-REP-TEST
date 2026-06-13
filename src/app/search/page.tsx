@@ -55,17 +55,17 @@ export default function SearchPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-[800px] mx-auto px-4 py-6">
+      <div className="max-w-[800px] mx-auto px-3 sm:px-4 py-6">
         {/* Search Bar */}
         <div className="relative mb-6">
-          <SearchIcon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
+          <SearchIcon size={15} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
           <input
             type="text"
             placeholder="모델명, 공장, 키워드로 검색..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
-            className="w-full h-12 pl-11 pr-10 bg-white/[0.05] border border-white/[0.08] rounded-xl text-sm placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 focus:bg-white/[0.08] transition-all"
+            className="w-full h-10 pl-11 pr-10 bg-[#111111] border border-white/[0.08] rounded-xl text-[11px] placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 transition-colors font-medium text-white"
           />
           {query && (
             <button onClick={() => setQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-white/5 rounded-full">
@@ -80,7 +80,7 @@ export default function SearchPage() {
             {recentSearches.length > 0 && (
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-sm font-bold flex items-center gap-1.5"><Clock size={14} className="text-zinc-400" /> 최근 검색</h3>
+                  <h3 className="text-sm font-black text-white flex items-center gap-1.5 uppercase tracking-wider"><Clock size={14} className="text-zinc-400" /> 최근 검색</h3>
                   <button onClick={() => setRecentSearches([])} className="text-[11px] text-zinc-500 hover:text-zinc-300">전체 삭제</button>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -95,7 +95,7 @@ export default function SearchPage() {
 
             {/* Trending */}
             <div className="mb-6">
-              <h3 className="text-sm font-bold flex items-center gap-1.5 mb-3"><TrendingUp size={14} className="text-gold" /> 실시간 인기 검색어</h3>
+              <h3 className="text-sm font-black text-white flex items-center gap-1.5 mb-3 uppercase tracking-wider"><TrendingUp size={14} className="text-gold" /> 실시간 인기 검색어</h3>
               <div className="glass rounded-xl p-4">
                 <div className="grid grid-cols-2 gap-2">
                   {SEARCH_TRENDING.map((term, i) => (
@@ -110,7 +110,7 @@ export default function SearchPage() {
 
             {/* Popular Models */}
             <div>
-              <h3 className="text-sm font-bold mb-3">인기 모델</h3>
+              <h3 className="text-sm font-black text-white mb-3 uppercase tracking-wider">인기 모델</h3>
               <div className="grid grid-cols-3 gap-3">
                 {POPULAR_MODELS.slice(0, 6).map((model) => (
                   <Link key={model.id} href={`/models/${model.id}`} className="glass rounded-xl p-3 text-center card-hover group">
@@ -129,7 +129,7 @@ export default function SearchPage() {
             {/* Search Results */}
             {filteredModels.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-sm font-bold mb-3">모델 ({filteredModels.length})</h3>
+                <h3 className="text-sm font-black text-white mb-3 uppercase tracking-wider">모델 ({filteredModels.length})</h3>
                 <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
                   {filteredModels.map((model) => (
                     <Link key={model.id} href={`/models/${model.id}`} className="glass rounded-xl p-3 shrink-0 w-32 text-center card-hover group">
@@ -144,7 +144,7 @@ export default function SearchPage() {
             )}
 
             <div>
-              <h3 className="text-sm font-bold mb-3">게시글 ({filteredPosts.length})</h3>
+              <h3 className="text-sm font-black text-white mb-3 uppercase tracking-wider">게시글 ({filteredPosts.length})</h3>
               {filteredPosts.length > 0 ? (
                 <div className="glass rounded-xl divide-y divide-white/[0.04]">
                   {filteredPosts.map((post) => (

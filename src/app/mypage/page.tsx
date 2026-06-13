@@ -30,7 +30,7 @@ const MENU_ITEMS = [
 export default function MyPage() {
   return (
     <div className="min-h-screen">
-      <div className="max-w-[800px] mx-auto px-4 py-6">
+      <div className="max-w-[800px] mx-auto px-3 sm:px-4 py-6">
         {/* Profile Card */}
         <div className="glass rounded-2xl p-6 mb-6 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
@@ -40,7 +40,7 @@ export default function MyPage() {
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold">워치매니아</h2>
+                <h2 className="text-lg font-black text-white">워치매니아</h2>
                 <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-gold/20 text-gold">Lv.5</span>
               </div>
               <p className="text-xs text-zinc-500 mt-0.5">가입일: 2024.01.15 · 활동 152일</p>
@@ -89,7 +89,7 @@ export default function MyPage() {
 
         {/* Recent Posts */}
         <div>
-          <h3 className="text-sm font-bold mb-3">최근 작성글</h3>
+          <h3 className="text-sm font-black text-white mb-3 uppercase tracking-wider">최근 작성글</h3>
           <div className="glass rounded-xl divide-y divide-white/[0.04]">
             {MY_POSTS.map((post) => (
               <Link key={post.id} href={`/community/${post.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-white/[0.02] transition-colors group">

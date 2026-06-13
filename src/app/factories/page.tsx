@@ -32,20 +32,20 @@ export default function FactoriesPage() {
 
   return (
     <div className="min-h-screen">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-6">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold">공장 랭킹</h1>
-          <p className="text-sm text-zinc-500 mt-1">검증된 공장별 평점, 전문 분야, QC 데이터를 비교하세요.</p>
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-4 lg:px-6 py-6">
+        <div className="mb-6 border-b border-white/[0.05] pb-4">
+          <h1 className="text-2xl font-black tracking-tight text-white uppercase">공장 랭킹</h1>
+          <p className="text-xs sm:text-sm text-zinc-500 mt-1 font-bold">검증된 공장별 평점, 전문 분야, QC 데이터를 비교하세요.</p>
         </div>
 
         <div className="relative w-full sm:w-80 mb-6">
-          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
           <input
             type="text"
             placeholder="공장명 또는 모델 검색..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-10 pl-9 pr-4 bg-white/[0.05] border border-white/[0.08] rounded-lg text-sm placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 transition-colors"
+            className="w-full h-9 pl-9 pr-4 bg-[#111111] border border-white/[0.08] rounded-xl text-[11px] placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 transition-colors font-medium text-white"
           />
         </div>
 

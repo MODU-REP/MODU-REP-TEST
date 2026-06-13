@@ -13,8 +13,10 @@ import {
   ThumbsUp,
   Sliders,
   Send,
-  HelpCircle
+  HelpCircle,
+  X
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { QC_POSTS, QCComment } from "@/lib/data";
 
 interface PageProps {
@@ -28,8 +30,138 @@ export default function QCDetailPage({ params }: PageProps) {
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // 이미지 슬라이더 인덱스
+  // 이미지 슬라이더 및 라이트박스 상태
   const [activeImg, setActiveImg] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+
+  // 터치 및 줌/드래그 상태
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isSwiping, setIsSwiping] = useState(false);
+
+  // 라이트박스 줌/팬 상태
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const [pinchStartDist, setPinchStartDist] = useState<number | null>(null);
+  const [lastTap, setLastTap] = useState<number>(0);
+
+  const handleTouchStartMain = (e: React.TouchEvent) => {
+    setIsSwiping(false);
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMoveMain = (e: React.TouchEvent) => {
+    const currentX = e.targetTouches[0].clientX;
+    if (touchStart && Math.abs(touchStart - currentX) > 10) {
+      setIsSwiping(true);
+    }
+    setTouchEnd(currentX);
+  };
+
+  const handleTouchEndMain = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    if (isLeftSwipe) {
+      setActiveImg((activeImg + 1) % post.images.length);
+    } else if (isRightSwipe) {
+      setActiveImg((activeImg - 1 + post.images.length) % post.images.length);
+    }
+  };
+
+  const handleDoubleTap = () => {
+    if (scale > 1) {
+      setScale(1);
+      setPosition({ x: 0, y: 0 });
+    } else {
+      setScale(2);
+      setPosition({ x: 0, y: 0 });
+    }
+  };
+
+  const handleTouchStartLightbox = (e: React.TouchEvent) => {
+    setIsSwiping(false);
+    setTouchEnd(null);
+    setTouchStart(e.touches[0].clientX);
+
+    if (e.touches.length === 2) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      setPinchStartDist(dist);
+    } else if (e.touches.length === 1 && scale > 1) {
+      setPanStart({
+        x: e.touches[0].clientX - position.x,
+        y: e.touches[0].clientY - position.y
+      });
+      setIsPanning(true);
+    }
+  };
+
+  const handleTouchMoveLightbox = (e: React.TouchEvent) => {
+    if (e.touches.length === 2 && pinchStartDist) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const newScale = Math.max(1, Math.min(3, dist / pinchStartDist));
+      setScale(newScale);
+    } else if (e.touches.length === 1) {
+      const currentX = e.touches[0].clientX;
+      if (touchStart && Math.abs(touchStart - currentX) > 10) {
+        setIsSwiping(true);
+      }
+      setTouchEnd(currentX);
+
+      if (scale > 1 && isPanning) {
+        const newX = e.touches[0].clientX - panStart.x;
+        const newY = e.touches[0].clientY - panStart.y;
+        const limitX = (scale - 1) * 150;
+        const limitY = (scale - 1) * 150;
+        setPosition({
+          x: Math.max(-limitX, Math.min(limitX, newX)),
+          y: Math.max(-limitY, Math.min(limitY, newY))
+        });
+      }
+    }
+  };
+
+  const handleTouchEndLightbox = () => {
+    setPinchStartDist(null);
+    setIsPanning(false);
+
+    if (scale <= 1) {
+      setScale(1);
+      setPosition({ x: 0, y: 0 });
+      if (touchStart && touchEnd) {
+        const distance = touchStart - touchEnd;
+        if (distance > 50) {
+          setActiveImg((activeImg + 1) % post.images.length);
+        } else if (distance < -50) {
+          setActiveImg((activeImg - 1 + post.images.length) % post.images.length);
+        }
+      }
+    }
+  };
+
+  const handleImageClick = (e: React.MouseEvent) => {
+    const now = Date.now();
+    if (now - lastTap < 300) {
+      handleDoubleTap();
+    }
+    setLastTap(now);
+  };
+
+  const handleLightboxClose = () => {
+    setIsLightboxOpen(false);
+    setScale(1);
+    setPosition({ x: 0, y: 0 });
+  };
 
   // 투표 및 댓글 로컬 상태 관리
   const [glVotes, setGlVotes] = useState(0);
@@ -171,26 +303,45 @@ export default function QCDetailPage({ params }: PageProps) {
           
           {/* Left Column: Image Slider */}
           <div className="space-y-4">
-            <div className="relative aspect-square rounded-2xl overflow-hidden border border-white/[0.06] bg-zinc-950 flex items-center justify-center group">
+            <div 
+              onTouchStart={handleTouchStartMain}
+              onTouchMove={handleTouchMoveMain}
+              onTouchEnd={handleTouchEndMain}
+              onClick={(e) => {
+                if (isSwiping) {
+                  e.preventDefault();
+                  return;
+                }
+                setIsLightboxOpen(true);
+              }}
+              className="relative aspect-square rounded-2xl overflow-hidden border border-white/[0.06] bg-zinc-950 flex items-center justify-center group cursor-pointer"
+            >
               <img 
                 src={post.images[activeImg]} 
                 alt="QC 확대 이미지" 
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain select-none pointer-events-none"
+                draggable={false}
               />
               
               {/* Prev/Next buttons */}
               {post.images.length > 1 && (
                 <>
                   <button 
-                    onClick={() => setActiveImg((activeImg - 1 + post.images.length) % post.images.length)}
-                    className="absolute left-3 p-2 rounded-full bg-black/60 hover:bg-gold hover:text-black border border-white/10 text-white transition-all backdrop-blur-md opacity-0 group-hover:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveImg((activeImg - 1 + post.images.length) % post.images.length);
+                    }}
+                    className="absolute left-3 p-2 rounded-full bg-black/60 hover:bg-gold hover:text-black border border-white/10 text-white transition-all backdrop-blur-md opacity-0 group-hover:opacity-100 z-10"
                     aria-label="이전 이미지"
                   >
                     <ChevronLeft size={20} />
                   </button>
                   <button 
-                    onClick={() => setActiveImg((activeImg + 1) % post.images.length)}
-                    className="absolute right-3 p-2 rounded-full bg-black/60 hover:bg-gold hover:text-black border border-white/10 text-white transition-all backdrop-blur-md opacity-0 group-hover:opacity-100"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveImg((activeImg + 1) % post.images.length);
+                    }}
+                    className="absolute right-3 p-2 rounded-full bg-black/60 hover:bg-gold hover:text-black border border-white/10 text-white transition-all backdrop-blur-md opacity-0 group-hover:opacity-100 z-10"
                     aria-label="다음 이미지"
                   >
                     <ChevronRight size={20} />
@@ -410,6 +561,85 @@ export default function QCDetailPage({ params }: PageProps) {
         </div>
 
       </div>
+
+      {/* Lightbox Modal */}
+      <AnimatePresence>
+        {isLightboxOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/95 z-[100] flex flex-col items-center justify-between p-4"
+          >
+            {/* Top Bar */}
+            <div className="w-full flex items-center justify-between z-10 text-white">
+              <span className="text-xs font-bold text-zinc-400">
+                {activeImg + 1} / {post.images.length}
+              </span>
+              <button 
+                onClick={handleLightboxClose}
+                className="p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors cursor-pointer"
+                aria-label="닫기"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Main Image Container */}
+            <div 
+              className="flex-1 w-full flex items-center justify-center overflow-hidden relative"
+              onTouchStart={handleTouchStartLightbox}
+              onTouchMove={handleTouchMoveLightbox}
+              onTouchEnd={handleTouchEndLightbox}
+            >
+              <div
+                style={{
+                  transform: `scale(${scale}) translate(${position.x / scale}px, ${position.y / scale}px)`,
+                  transition: isPanning ? "none" : "transform 0.15s ease-out"
+                }}
+                className="max-w-full max-h-[75vh] md:max-h-[85vh] select-none cursor-grab active:cursor-grabbing"
+                onClick={handleImageClick}
+              >
+                <img
+                  src={post.images[activeImg]}
+                  alt="QC 라이트박스 이미지"
+                  className="max-w-full max-h-[75vh] md:max-h-[85vh] object-contain pointer-events-none"
+                  draggable={false}
+                />
+              </div>
+
+              {/* Prev/Next buttons for desktop inside Lightbox */}
+              {post.images.length > 1 && scale === 1 && (
+                <>
+                  <button 
+                    onClick={() => setActiveImg((activeImg - 1 + post.images.length) % post.images.length)}
+                    className="hidden md:flex absolute left-4 p-3 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all backdrop-blur-md cursor-pointer"
+                    aria-label="이전 이미지"
+                  >
+                    <ChevronLeft size={24} />
+                  </button>
+                  <button 
+                    onClick={() => setActiveImg((activeImg + 1) % post.images.length)}
+                    className="hidden md:flex absolute right-4 p-3 rounded-full bg-white/5 hover:bg-white/10 text-white transition-all backdrop-blur-md cursor-pointer"
+                    aria-label="다음 이미지"
+                  >
+                    <ChevronRight size={24} />
+                  </button>
+                </>
+              )}
+            </div>
+
+            {/* Bottom Info Bar / Zoom Info */}
+            <div className="w-full text-center pb-4 z-10 text-[11px] text-zinc-500 font-bold">
+              {scale > 1 ? (
+                <span>손가락으로 드래그하여 이동할 수 있습니다. 더블 탭하면 원래 크기대로 축소됩니다.</span>
+              ) : (
+                <span>손가락으로 쓸어서 넘기거나, 이미지를 더블 클릭/더블 탭하여 확대하세요.</span>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

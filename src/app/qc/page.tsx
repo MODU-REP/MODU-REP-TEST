@@ -43,19 +43,16 @@ export default function QCPage() {
 
   return (
     <div className="min-h-screen pb-16 lg:pb-0">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-6">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-4 lg:px-6 py-6">
         
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 border-b border-white/[0.05] pb-4 flex items-center justify-between">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">QC 갤러리 &amp; 판독 연구소</h1>
-            <p className="text-xs sm:text-sm text-zinc-500 mt-1">
+            <h1 className="text-2xl font-black tracking-tight text-white uppercase">QC 판독소</h1>
+            <p className="text-xs sm:text-sm text-zinc-500 mt-1 font-bold">
               공장에서 갓 도착한 출고(QC) 사진들을 정밀 검증하고, 회원들과 함께 합격(GL) 또는 재요청(RL) 의견을 나눠보세요.
             </p>
           </div>
-          <Link href="/qc/upload" className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gold text-black text-sm font-bold rounded-full hover:bg-gold-light transition-all duration-300">
-            <Camera size={14} /> QC 올리기
-          </Link>
         </div>
 
         {/* Filter controls */}
@@ -63,26 +60,26 @@ export default function QCPage() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             {/* Search Input */}
             <div className="relative min-w-[240px]">
-              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
               <input
                 type="text"
                 placeholder="모델명, 공장명 검색..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full h-10 pl-9 pr-4 bg-white/[0.04] border border-white/[0.08] rounded-xl text-xs placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 transition-colors font-bold text-white"
+                className="w-full h-9 pl-9 pr-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-[11px] placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 transition-colors font-medium text-white"
               />
             </div>
             
             {/* Watch/Bag Category Filter */}
-            <div className="flex gap-1">
+            <div className="flex flex-wrap gap-1">
               {TABS.map((tab) => (
                 <button 
                   key={tab} 
                   onClick={() => setCategory(tab)} 
-                  className={`px-4 py-2 text-xs font-bold rounded-full transition-all duration-200 ${
+                  className={`px-3 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-bold rounded-full transition-all duration-200 ${
                     category === tab 
-                      ? "bg-gold text-black shadow-sm" 
-                      : "bg-white/[0.02] text-zinc-400 hover:bg-white/[0.05] border border-white/[0.04]"
+                      ? "bg-gold text-black font-bold" 
+                      : "bg-white/[0.02] text-zinc-400 hover:bg-white/[0.05] hover:text-white border border-white/[0.04]"
                   }`}
                 >
                   {tab}
@@ -92,12 +89,12 @@ export default function QCPage() {
           </div>
 
           {/* QC / GL / RL Type Filter */}
-          <div className="flex gap-1 items-center bg-white/[0.02] border border-white/[0.04] p-1 rounded-xl">
+          <div className="flex flex-wrap gap-1 items-center bg-white/[0.02] border border-white/[0.04] p-1 rounded-xl">
             {TYPE_FILTERS.map((t) => (
               <button 
                 key={t} 
                 onClick={() => setTypeFilter(t)} 
-                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all duration-200 ${
+                className={`px-2.5 py-1 sm:px-3 sm:py-1.5 text-[11px] sm:text-xs font-bold rounded-lg transition-all duration-200 ${
                   typeFilter === t 
                     ? "bg-white/10 text-white" 
                     : "text-zinc-500 hover:text-zinc-300"
@@ -110,7 +107,7 @@ export default function QCPage() {
         </div>
 
         {/* QC List Layout (Unified compact list style) */}
-        <div className="w-[calc(100%+2rem)] -mx-4 sm:w-full sm:mx-0 bg-[#111111]/60 backdrop-blur-md border-x-0 border-y sm:border border-white/[0.05] rounded-none sm:rounded-2xl p-4 sm:p-5 shadow-xl shadow-black/20">
+        <div className="glass rounded-2xl overflow-hidden border border-white/[0.05] bg-[#111111]/30 shadow-xl p-3 sm:p-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filtered.map((item, i) => {
               const statusStyle = 
@@ -136,12 +133,12 @@ export default function QCPage() {
                 >
                   <Link
                     href={`/qc/${item.id}`}
-                    className="w-full min-w-0 flex items-center gap-3 p-2 rounded-xl hover:bg-white/[0.02] transition-colors group cursor-pointer border border-transparent hover:border-white/[0.02]"
+                    className="w-full min-w-0 flex items-start gap-3 p-2 rounded-xl hover:bg-white/[0.02] transition-colors group cursor-pointer border border-transparent hover:border-white/[0.02]"
                   >
                     <img
                       src={item.images[0]}
                       alt={item.title}
-                      className="w-12 h-12 rounded-lg object-cover bg-zinc-900 border border-white/[0.06] shrink-0"
+                      className="w-12 h-12 rounded-lg object-cover bg-zinc-900 border border-white/[0.06] shrink-0 mt-0.5"
                     />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
@@ -155,10 +152,10 @@ export default function QCPage() {
                           {item.category}
                         </span>
                       </div>
-                      <h4 className="text-[11px] font-bold text-zinc-200 group-hover:text-gold transition-colors line-clamp-2 whitespace-normal break-all mt-1">
+                      <h4 className="text-[11px] font-semibold text-zinc-200 group-hover:text-gold transition-colors line-clamp-2 whitespace-normal break-all mt-1 leading-tight">
                         {item.title}
                       </h4>
-                      <div className="flex items-center gap-2 mt-0.5 text-[9px] text-zinc-500 font-bold">
+                      <div className="flex items-center gap-2 mt-1.5 text-[8.5px] text-zinc-500 font-bold">
                         <span>{item.author}</span>
                         <span>•</span>
                         <span>{item.time}</span>
@@ -178,18 +175,21 @@ export default function QCPage() {
           </div>
         </div>
 
+        {/* Board Controls */}
+        <div className="hidden sm:flex items-center justify-end mt-4">
+          <Link 
+            href="/qc/upload" 
+            className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gold text-black text-[11px] font-black rounded-lg hover:bg-gold-light hover:shadow-md hover:shadow-gold/20 transition-all"
+          >
+            <Camera size={12} /> QC 글쓰기
+          </Link>
+        </div>
+
         {filtered.length === 0 && (
           <div className="text-center py-20 text-zinc-600 font-bold text-xs">
             검색 결과와 일치하는 QC 게시글이 없습니다.
           </div>
         )}
-
-        {/* Mobile Upload Button */}
-        <div className="flex justify-end mt-4 sm:hidden">
-          <Link href="/qc/upload" className="inline-flex items-center gap-2 px-5 py-2.5 bg-gold text-black text-xs font-black rounded-full shadow-lg">
-            <Camera size={13} /> QC 올리기
-          </Link>
-        </div>
       </div>
     </div>
   );

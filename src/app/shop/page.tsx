@@ -22,12 +22,12 @@ const STEPS = [
 export default function ShopPage() {
   return (
     <div className="min-h-screen">
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-6">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-4 lg:px-6 py-6">
         {/* Hero */}
         <div className="glass rounded-2xl p-6 lg:p-10 mb-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-gold/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <h1 className="text-2xl lg:text-3xl font-bold mb-2">구매센터</h1>
-          <p className="text-sm text-zinc-400 mb-6 max-w-lg">검증된 딜러를 통해 안전하게 구매하세요. 모든 딜러는 커뮤니티 인증을 거쳤습니다.</p>
+          <h1 className="text-2xl lg:text-3xl font-black text-white uppercase mb-2">구매센터</h1>
+          <p className="text-sm text-zinc-400 mb-6 max-w-lg font-bold">검증된 딜러를 통해 안전하게 구매하세요. 모든 딜러는 커뮤니티 인증을 거쳤습니다.</p>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {[
               { icon: ShieldCheck, label: "인증 딜러만", desc: "커뮤니티 검증 완료" },

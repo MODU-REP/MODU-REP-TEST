@@ -20,7 +20,7 @@ export default function MagazinePage() {
       {/* Magazine Hero Cover */}
       <div className="relative py-20 border-b border-white/[0.05] overflow-hidden bg-black">
         <div className="absolute inset-0 bg-radial-gradient from-gold/5 via-transparent to-transparent opacity-50" />
-        <div className="max-w-[1400px] mx-auto px-4 lg:px-6 relative z-10 text-center">
+        <div className="max-w-[1400px] mx-auto px-3 sm:px-4 lg:px-6 relative z-10 text-center">
           <span className="text-[11px] font-black tracking-[0.3em] text-gold uppercase">luxury lifestyle &amp; horology</span>
           <h1 className="text-4xl md:text-5xl font-black text-white tracking-tight mt-3 mb-4 font-sans uppercase">
             모두의렙 매거진
@@ -31,18 +31,18 @@ export default function MagazinePage() {
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-8">
+      <div className="max-w-[1400px] mx-auto px-3 sm:px-4 lg:px-6 py-8">
         
         {/* Category Navigation */}
-        <div className="flex gap-1.5 mb-8 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04]">
+        <div className="flex flex-wrap items-center gap-1.5 mb-8 pb-2 border-b border-white/[0.04]">
           {TABS.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-5 py-2.5 text-xs font-bold rounded-full whitespace-nowrap transition-all duration-300 ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-bold rounded-full whitespace-nowrap transition-all duration-200 ${
                 activeTab === tab 
-                  ? "bg-gold text-black shadow-lg shadow-gold/15" 
-                  : "bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.05] border border-white/[0.03]"
+                  ? "bg-gold text-black font-bold" 
+                  : "bg-white/[0.02] text-zinc-400 hover:bg-white/[0.05] hover:text-white border border-white/[0.04]"
               }`}
             >
               {tab}
