@@ -95,7 +95,7 @@ export function MobileNav() {
                 className="flex items-center gap-2.5 px-3.5 py-3 rounded-xl text-xs font-bold text-zinc-300 hover:text-gold hover:bg-white/5 transition-all duration-200 border-t border-white/[0.04]"
               >
                 <Camera size={14} className="text-gold" />
-                <span>QC 판독 올리기</span>
+                <span>QC 글쓰기</span>
               </Link>
             </motion.div>
           </>

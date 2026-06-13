@@ -141,7 +141,7 @@ export default function QCUploadPage() {
               <Camera size={16} />
             </div>
             <div>
-              <h1 className="text-lg font-black text-white uppercase tracking-tight">QC 판독 올리기</h1>
+              <h1 className="text-lg font-black text-white uppercase tracking-tight">QC 글쓰기</h1>
               <p className="text-[10px] text-zinc-500 font-bold">공장에서 받은 검수 사진을 업로드하고, 커뮤니티의 검증을 받아보세요.</p>
             </div>
           </div>
