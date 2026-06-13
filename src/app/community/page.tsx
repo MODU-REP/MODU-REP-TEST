@@ -138,7 +138,7 @@ export default function CommunityPage() {
           {/* Main List */}
           <div>
             {/* Tab Navigation with Slide Buttons */}
-            <div className="relative mb-4 group/tabs">
+            <div className="relative mb-4 group/tabs w-full max-w-full overflow-hidden">
               {showLeftArrow && (
                 <button
                   type="button"
@@ -154,7 +154,7 @@ export default function CommunityPage() {
               
               <div 
                 ref={tabsRef}
-                className="flex flex-nowrap items-center gap-1.5 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04] scroll-smooth"
+                className="flex flex-nowrap items-center gap-1.5 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04] scroll-smooth w-full"
               >
                 {TABS.map((tab) => (
                   <button 

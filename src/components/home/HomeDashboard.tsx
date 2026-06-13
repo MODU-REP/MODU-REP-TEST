@@ -117,7 +117,7 @@ export function HomeDashboard() {
           </div>
 
           {/* 카테고리 필터 탭 with Slide Buttons */}
-          <div className="relative mb-4 group/tabs shrink-0">
+          <div className="relative mb-4 group/tabs shrink-0 w-full max-w-full overflow-hidden">
             {showLeftArrow && (
               <button
                 type="button"
@@ -133,7 +133,7 @@ export function HomeDashboard() {
 
             <div 
               ref={tabsRef}
-              className="flex flex-nowrap items-center gap-1.5 overflow-x-auto hide-scrollbar pb-1 scroll-smooth"
+              className="flex flex-nowrap items-center gap-1.5 overflow-x-auto hide-scrollbar pb-1 scroll-smooth w-full"
             >
               {["전체", "초보 가이드", "정보", "Q&A", "자유"].map((tab) => (
                 <button
