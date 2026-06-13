@@ -18,19 +18,19 @@ import { COMMUNITY_POSTS, QC_POSTS, CommunityPost } from "@/lib/data";
 
 // 3열: 실시간 인기 TOP 5 데이터
 const POPULAR_WATCHES = [
-  { rank: 1, name: "데이토나 126500", factory: "Clean Factory", price: "₩780", image: "/hero_watch_3.png" },
+  { rank: 1, name: "데이토나 126500", factory: "Clean Factory", price: "₩780", image: "/hero_pc_2.png" },
   { rank: 2, name: "서브마리너 126610LN", factory: "VSF Factory", price: "₩530", image: "/hero_pc_1.png" },
   { rank: 3, name: "GMT-Master II 126710", factory: "Clean Factory", price: "₩650", image: "/hero_mobile_1.png" },
-  { rank: 4, name: "데이트저스트 126334", factory: "VSF Factory", price: "₩420", image: "/hero_pc_3.png" },
-  { rank: 5, name: "익스플로러 II 216570", factory: "Clean Factory", price: "₩480", image: "/hero_mobile_2.png" },
+  { rank: 4, name: "데이트저스트 126334", factory: "VSF Factory", price: "₩420", image: "/hero_watch_3.png" },
+  { rank: 5, name: "익스플로러 II 216570", factory: "Clean Factory", price: "₩480", image: "/hero_mobile_3.png" },
 ];
 
 const POPULAR_BAGS = [
-  { rank: 1, name: "클래식 플랩 백", factory: "Chanel 187", price: "₩630", image: "/hero_mobile_1.png" },
-  { rank: 2, name: "타임리스 토트 백", factory: "Chanel 187", price: "₩580", image: "/hero_mobile_3.png" },
+  { rank: 1, name: "클래식 플랩 백", factory: "Chanel 187", price: "₩630", image: "/hero_bag_2.png" },
+  { rank: 2, name: "타임리스 토트 백", factory: "Chanel 187", price: "₩580", image: "/hero_mobile_2.png" },
   { rank: 3, name: "스피디 25 모노그램", factory: "LV Factory", price: "₩350", image: "/hero_bag_2.png" },
-  { rank: 4, name: "마몽 숄더 백", factory: "Gucci Factory", price: "₩320", image: "/hero_pc_1.png" },
-  { rank: 5, name: "카세트 백", factory: "Bottega Factory", price: "₩410", image: "/hero_pc_3.png" },
+  { rank: 4, name: "마몽 숄더 백", factory: "Gucci Factory", price: "₩320", image: "/hero_mobile_2.png" },
+  { rank: 5, name: "카세트 백", factory: "Bottega Factory", price: "₩410", image: "/hero_bag_2.png" },
 ];
 
 const categoryColors: Record<string, string> = {
@@ -53,7 +53,22 @@ export function HomeDashboard() {
     const stored = localStorage.getItem("community_posts");
     if (stored) {
       try {
-        loadedPosts = JSON.parse(stored);
+        let parsed = JSON.parse(stored) as CommunityPost[];
+        let migrated = false;
+        parsed = parsed.map(post => {
+          if (post.category === "후기" as any) {
+            post.category = "정보";
+            migrated = true;
+          } else if (post.category === "배송" as any || post.category === "구매/판매" as any) {
+            post.category = "자유";
+            migrated = true;
+          }
+          return post;
+        });
+        if (migrated) {
+          localStorage.setItem("community_posts", JSON.stringify(parsed));
+        }
+        loadedPosts = parsed;
       } catch (e) {
         loadedPosts = COMMUNITY_POSTS;
       }
@@ -80,7 +95,7 @@ export function HomeDashboard() {
           <div className="flex items-center justify-between mb-4">
             <h3 className="flex items-center gap-2 text-[15px] font-bold text-white tracking-tight">
               <MessageSquare size={16} className="text-gold" />
-              실시간 커뮤니티 피드
+              커뮤니티 새글
             </h3>
             <Link href="/community" className="text-[11px] text-zinc-500 hover:text-gold flex items-center gap-0.5 transition-colors font-medium">
               더보기 <ChevronRight size={12} />
@@ -161,7 +176,7 @@ export function HomeDashboard() {
           <div className="flex items-center justify-between mb-4">
             <h3 className="flex items-center gap-2 text-[15px] font-bold text-white tracking-tight">
               <Camera size={16} className="text-gold" />
-              실시간 QC 피드
+              QC 새글
             </h3>
             <Link href="/qc" className="text-[11px] text-zinc-500 hover:text-gold flex items-center gap-0.5 transition-colors font-medium">
               더보기 <ChevronRight size={12} />
@@ -269,7 +284,7 @@ export function HomeDashboard() {
           <div className="flex items-center justify-between mb-4">
             <h3 className="flex items-center gap-2 text-[15px] font-bold text-white tracking-tight">
               <Star size={16} className="text-gold" />
-              실시간 인기 TOP 5
+              실시간 인기모델
             </h3>
             <Link href="/prices" className="text-[11px] text-zinc-500 hover:text-gold flex items-center gap-0.5 transition-colors font-medium">
               더보기 <ChevronRight size={12} />

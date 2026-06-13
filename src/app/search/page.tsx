@@ -18,7 +18,22 @@ export default function SearchPage() {
     const stored = localStorage.getItem("community_posts");
     if (stored) {
       try {
-        loadedPosts = JSON.parse(stored);
+        let parsed = JSON.parse(stored) as CommunityPost[];
+        let migrated = false;
+        parsed = parsed.map(post => {
+          if (post.category === "후기" as any) {
+            post.category = "정보";
+            migrated = true;
+          } else if (post.category === "배송" as any || post.category === "구매/판매" as any) {
+            post.category = "자유";
+            migrated = true;
+          }
+          return post;
+        });
+        if (migrated) {
+          localStorage.setItem("community_posts", JSON.stringify(parsed));
+        }
+        loadedPosts = parsed;
       } catch (e) {
         loadedPosts = COMMUNITY_POSTS;
       }
