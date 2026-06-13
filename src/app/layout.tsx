@@ -35,12 +35,12 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark overflow-x-hidden w-full max-w-full`}
       data-scroll-behavior="smooth"
     >
-      <body className="min-h-full flex flex-col bg-[#0A0A0A] text-white">
+      <body className="min-h-full flex flex-col bg-[#0A0A0A] text-white overflow-x-hidden w-full max-w-full">
         <Header />
-        <main className="flex-1 pt-14 lg:pt-16 pb-16 lg:pb-0 overflow-x-hidden">{children}</main>
+        <main className="flex-1 pt-14 lg:pt-16 pb-16 lg:pb-0 overflow-x-hidden w-full max-w-full">{children}</main>
         <Footer />
         <MobileNav />
       </body>

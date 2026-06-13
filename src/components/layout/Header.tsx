@@ -114,7 +114,7 @@ export function Header() {
             </button>
             <button className="relative w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-zinc-400 hover:text-white transition-colors">
               <Bell size={18} />
-              <span className="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] bg-red-500 rounded-full text-[8px] flex items-center justify-center font-bold px-0.5 text-white">12</span>
+              <span className="absolute -top-0.5 right-0 min-w-[15px] h-[15px] bg-red-500 rounded-full text-[8px] flex items-center justify-center font-bold px-0.5 text-white">12</span>
             </button>
             <button className="hidden sm:flex relative w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-zinc-400 hover:text-white transition-colors">
               <MessageSquare size={18} />
