@@ -149,24 +149,24 @@ export default function CommunityPage() {
               <div className="block sm:hidden divide-y divide-white/[0.04] text-[11px] font-bold">
                 {paginatedPosts.map((post) => (
                   <div key={post.id} className="px-3 py-3 hover:bg-white/[0.02] transition-colors group">
-                    <div className="flex items-center gap-1 min-w-0 w-full mb-1">
-                      <span className={`text-[8px] font-black px-1.5 py-0.5 rounded border border-white/[0.03] shrink-0 ${categoryColors[post.category] || "bg-zinc-800 text-zinc-300"}`}>
+                    <div className="flex items-start gap-1 min-w-0 w-full mb-1">
+                      <span className={`text-[8px] font-black px-1.5 py-0.5 rounded border border-white/[0.03] shrink-0 mt-0.5 ${categoryColors[post.category] || "bg-zinc-800 text-zinc-300"}`}>
                         {post.category}
                       </span>
-                      {post.hot && <Flame size={11} className="text-orange-400 shrink-0" />}
+                      {post.hot && <Flame size={11} className="text-orange-400 shrink-0 mt-0.5" />}
                       <Link 
                         href={`/community/${post.id}`} 
-                        className="text-zinc-200 hover:text-gold font-semibold transition-colors truncate min-w-0 flex-1 text-[11px] leading-tight"
+                        className="text-zinc-200 hover:text-gold font-semibold transition-colors whitespace-normal break-words min-w-0 flex-1 text-[11px] leading-tight"
                       >
                         {post.title}
                       </Link>
                       {post.comments > 0 && (
-                        <span className="text-[9px] text-red-400 font-black shrink-0">
+                        <span className="text-[9px] text-red-400 font-black shrink-0 mt-0.5">
                           [{post.comments}]
                         </span>
                       )}
                       {post.hasImage && (
-                        <ImageIcon size={11} className="text-zinc-500 shrink-0 ml-0.5" />
+                        <ImageIcon size={11} className="text-zinc-500 shrink-0 ml-0.5 mt-0.5" />
                       )}
                     </div>
                     {/* Mobile Info row */}
@@ -258,7 +258,7 @@ export default function CommunityPage() {
             </div>
 
             {/* Board Controls */}
-            <div className="flex items-center justify-end mt-4">
+            <div className="hidden sm:flex items-center justify-end mt-4">
               <Link 
                 href="/community/write" 
                 className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-gold text-black text-[11px] font-black rounded-lg hover:bg-gold-light hover:shadow-md hover:shadow-gold/20 transition-all"
