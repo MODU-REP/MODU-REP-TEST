@@ -124,7 +124,7 @@ export default function CommunityPage() {
           {/* Main List */}
           <div>
             {/* Tab Navigation */}
-            <div className="flex items-center gap-1.5 mb-4 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04]">
+            <div className="flex flex-wrap items-center gap-1.5 mb-4 pb-2 border-b border-white/[0.04]">
               {TABS.map((tab) => (
                 <button 
                   key={tab} 
@@ -132,7 +132,7 @@ export default function CommunityPage() {
                     setActiveTab(tab);
                     setCurrentPage(1);
                   }} 
-                  className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-full whitespace-nowrap transition-all duration-200 ${
+                  className={`px-3 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs md:text-sm font-bold rounded-full whitespace-nowrap transition-all duration-200 ${
                     activeTab === tab 
                       ? "bg-gold text-black font-bold" 
                       : "bg-white/[0.02] text-zinc-400 hover:bg-white/[0.05] hover:text-white border border-white/[0.04]"
