@@ -99,7 +99,7 @@ export function HomeDashboard() {
       
       {/* 1열: 실시간 커뮤니티 피드 */}
       <div className="bg-[#111111]/60 backdrop-blur-md border-x-0 border-y sm:border border-white/[0.05] rounded-none sm:rounded-2xl p-5 flex flex-col justify-between shadow-xl shadow-black/20">
-        <div>
+        <div className="w-full min-w-0">
           <div className="flex items-center justify-between mb-4">
             <h3 className="flex items-center gap-2 text-[15px] font-bold text-white tracking-tight">
               <MessageSquare size={16} className="text-gold" />
@@ -129,7 +129,7 @@ export function HomeDashboard() {
 
           {/* 게시글 목록 (게시판 게시판 형태로 썸네일 없이 테이블 스타일 렌더링) */}
           <div className="overflow-hidden border border-white/[0.05] rounded-xl bg-black/20 mt-2">
-            <table className="w-full border-collapse text-left text-[11px] font-bold">
+            <table className="w-full table-fixed border-collapse text-left text-[11px] font-bold">
               <thead>
                 <tr className="border-b border-white/[0.08] bg-white/[0.02] text-[9px] font-black text-zinc-500 uppercase tracking-wider">
                   <th className="py-2.5 px-3 text-center w-10">번호</th>
@@ -181,7 +181,7 @@ export function HomeDashboard() {
 
       {/* 2열: 실시간 QC 피드 (QC 새글) */}
       <div className="bg-[#111111]/60 backdrop-blur-md border-x-0 border-y sm:border border-white/[0.05] rounded-none sm:rounded-2xl p-5 flex flex-col justify-between shadow-xl shadow-black/20">
-        <div>
+        <div className="w-full min-w-0">
           <div className="flex items-center justify-between mb-4">
             <h3 className="flex items-center gap-2 text-[15px] font-bold text-white tracking-tight">
               <Camera size={16} className="text-gold" />
@@ -214,7 +214,7 @@ export function HomeDashboard() {
                   <Link
                     key={post.id}
                     href={`/qc/${post.id}`}
-                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/[0.02] transition-colors group cursor-pointer border border-transparent hover:border-white/[0.02]"
+                    className="w-full min-w-0 flex items-center gap-3 p-2 rounded-xl hover:bg-white/[0.02] transition-colors group cursor-pointer border border-transparent hover:border-white/[0.02]"
                   >
                     <img
                       src={post.images[0]}
@@ -230,7 +230,7 @@ export function HomeDashboard() {
                           {post.factory}
                         </span>
                       </div>
-                      <h4 className="text-[11px] font-bold text-zinc-200 group-hover:text-gold transition-colors truncate mt-1">
+                      <h4 className="text-[11px] font-bold text-zinc-200 group-hover:text-gold transition-colors line-clamp-2 whitespace-normal break-all mt-1">
                         {post.title}
                       </h4>
                       <div className="flex items-center gap-2 mt-0.5 text-[9px] text-zinc-500 font-bold">
@@ -254,7 +254,7 @@ export function HomeDashboard() {
 
       {/* 3열: 실시간 인기 TOP 5 */}
       <div className="bg-[#111111]/60 backdrop-blur-md border-x-0 border-y sm:border border-white/[0.05] rounded-none sm:rounded-2xl p-5 flex flex-col justify-between shadow-xl shadow-black/20">
-        <div>
+        <div className="w-full min-w-0">
           <div className="flex items-center justify-between mb-4">
             <h3 className="flex items-center gap-2 text-[15px] font-bold text-white tracking-tight">
               <Star size={16} className="text-gold" />
@@ -298,7 +298,7 @@ export function HomeDashboard() {
                 <Link
                   key={model.rank}
                   href="/qc"
-                  className="flex items-center gap-3 p-1.5 rounded-xl border border-transparent hover:border-white/[0.04] hover:bg-white/[0.02] transition-all group cursor-pointer"
+                  className="w-full min-w-0 flex items-center gap-3 p-1.5 rounded-xl border border-transparent hover:border-white/[0.04] hover:bg-white/[0.02] transition-all group cursor-pointer"
                 >
                   {/* 순위 번호 뱃지 */}
                   <span className={`w-5 h-5 rounded ${badgeStyle} text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm`}>
@@ -314,7 +314,7 @@ export function HomeDashboard() {
 
                   {/* 모델 정보 */}
                   <div className="min-w-0 flex-1">
-                    <h4 className="text-[12px] font-black text-white group-hover:text-gold transition-colors truncate">
+                    <h4 className="text-[12px] font-black text-white group-hover:text-gold transition-colors line-clamp-2 whitespace-normal break-all">
                       {model.name}
                     </h4>
                     <p className="text-[9px] text-zinc-500 font-bold truncate mt-0.5">
