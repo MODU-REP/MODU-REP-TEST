@@ -11,7 +11,9 @@ import {
   Camera, 
   CheckCircle2, 
   XCircle,
-  HelpCircle
+  HelpCircle,
+  Flame,
+  Image as ImageIcon
 } from "lucide-react";
 import Link from "next/link";
 import { COMMUNITY_POSTS, QC_POSTS, CommunityPost } from "@/lib/data";
@@ -23,6 +25,9 @@ const POPULAR_WATCHES = [
   { rank: 3, name: "GMT-Master II 126710", factory: "Clean Factory", price: "₩650", image: "/hero_mobile_1.png" },
   { rank: 4, name: "데이트저스트 126334", factory: "VSF Factory", price: "₩420", image: "/hero_watch_3.png" },
   { rank: 5, name: "익스플로러 II 216570", factory: "Clean Factory", price: "₩480", image: "/hero_mobile_3.png" },
+  { rank: 6, name: "GMT-Master II 펩시", factory: "Clean Factory", price: "₩670", image: "/hero_mobile_1.png" },
+  { rank: 7, name: "씨드웰러 126600", factory: "VSF Factory", price: "₩560", image: "/hero_pc_1.png" },
+  { rank: 8, name: "아쿠아테라 150M", factory: "VSF Factory", price: "₩410", image: "/hero_pc_3.png" },
 ];
 
 const POPULAR_BAGS = [
@@ -31,6 +36,9 @@ const POPULAR_BAGS = [
   { rank: 3, name: "스피디 25 모노그램", factory: "LV Factory", price: "₩350", image: "/hero_bag_2.png" },
   { rank: 4, name: "마몽 숄더 백", factory: "Gucci Factory", price: "₩320", image: "/hero_mobile_2.png" },
   { rank: 5, name: "카세트 백", factory: "Bottega Factory", price: "₩410", image: "/hero_bag_2.png" },
+  { rank: 6, name: "가브리엘 백팩", factory: "Chanel 187", price: "₩540", image: "/hero_mobile_2.png" },
+  { rank: 7, name: "샤넬 22백", factory: "Chanel 187", price: "₩490", image: "/hero_bag_2.png" },
+  { rank: 8, name: "카바스 백", factory: "Celine Factory", price: "₩380", image: "/hero_bag_2.png" },
 ];
 
 const categoryColors: Record<string, string> = {
@@ -119,50 +127,51 @@ export function HomeDashboard() {
             ))}
           </div>
 
-          {/* 게시글 목록 */}
-          <div className="space-y-3">
-            <AnimatePresence mode="popLayout">
-              {filteredCommPosts.slice(0, 4).map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/community/${post.id}`}
-                  className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/[0.02] transition-colors group cursor-pointer border border-transparent hover:border-white/[0.02] block"
-                >
-                  {post.hasImage && post.image ? (
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-14 h-14 rounded-lg object-cover bg-zinc-900 border border-white/[0.06] shrink-0"
-                    />
-                  ) : (
-                    <div className="w-14 h-14 rounded-lg bg-white/[0.03] border border-white/[0.04] flex items-center justify-center shrink-0">
-                      <MessageSquare size={16} className="text-zinc-600" />
-                    </div>
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <span className={`text-[9px] font-bold border px-1.5 py-0.5 rounded tracking-wide ${categoryColors[post.category] || "bg-zinc-800 text-zinc-400"}`}>
-                      {post.category}
-                    </span>
-                    <h4 className="text-[12px] font-black text-white group-hover:text-gold transition-colors truncate mt-1">
-                      {post.title}
-                    </h4>
-                    <div className="flex items-center gap-2 mt-2 text-[9px] text-zinc-500 font-bold">
-                      <span>{post.author}</span>
-                      <span>•</span>
-                      <span>{post.time}</span>
-                      <span className="ml-auto flex items-center gap-0.5 text-zinc-400">
-                        <MessageSquare size={10} /> {post.comments}
-                      </span>
-                      <span className="flex items-center gap-0.5 text-zinc-400">
-                        <Heart size={10} /> {post.likes}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </AnimatePresence>
+          {/* 게시글 목록 (게시판 게시판 형태로 썸네일 없이 테이블 스타일 렌더링) */}
+          <div className="overflow-hidden border border-white/[0.05] rounded-xl bg-black/20 mt-2">
+            <table className="w-full border-collapse text-left text-[11px] font-bold">
+              <thead>
+                <tr className="border-b border-white/[0.08] bg-white/[0.02] text-[9px] font-black text-zinc-500 uppercase tracking-wider">
+                  <th className="py-2.5 px-3 text-center w-10">번호</th>
+                  <th className="py-2.5 px-3">제목</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/[0.04] text-[11px]">
+                {filteredCommPosts.slice(0, 8).map((post, idx) => (
+                  <tr key={post.id} className="hover:bg-white/[0.02] transition-colors group">
+                    {/* 번호 */}
+                    <td className="py-2.5 px-3 text-center text-zinc-500 font-medium w-10">
+                      {idx + 1}
+                    </td>
+                    {/* 제목 */}
+                    <td className="py-2.5 px-3">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className={`text-[8px] font-black px-1.5 py-0.5 rounded border border-white/[0.03] ${categoryColors[post.category] || "bg-zinc-800 text-zinc-400"}`}>
+                          {post.category}
+                        </span>
+                        {post.hot && <Flame size={10} className="text-orange-400 shrink-0" />}
+                        <Link 
+                          href={`/community/${post.id}`} 
+                          className="text-zinc-300 group-hover:text-gold font-bold transition-colors truncate max-w-[150px] xs:max-w-[200px] md:max-w-[240px]"
+                        >
+                          {post.title}
+                        </Link>
+                        {post.comments > 0 && (
+                          <span className="text-[9px] text-red-400 font-black shrink-0">
+                            [{post.comments}]
+                          </span>
+                        )}
+                        {post.hasImage && (
+                          <ImageIcon size={10} className="text-zinc-500 shrink-0" />
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
             {filteredCommPosts.length === 0 && (
-              <div className="text-center py-12 text-zinc-600 text-xs font-bold">
+              <div className="text-center py-10 text-zinc-600 text-xs font-bold">
                 등록된 게시글이 없습니다.
               </div>
             )}
@@ -183,97 +192,62 @@ export function HomeDashboard() {
             </Link>
           </div>
 
-          {/* 최신 메인 추천 QC 카드 */}
-          {QC_POSTS.length > 0 && (
-            <Link href={`/qc/${QC_POSTS[0].id}`} className="block relative rounded-xl overflow-hidden mb-4 border border-white/[0.06] group cursor-pointer">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10" />
-              <img
-                src={QC_POSTS[0].images[0]}
-                alt={QC_POSTS[0].title}
-                className="w-full h-36 object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-              />
-              <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5">
-                <span className={`text-[9px] font-black px-2 py-0.5 rounded-full ${
-                  QC_POSTS[0].type === "GL" 
-                    ? "bg-emerald-500 text-black" 
-                    : QC_POSTS[0].type === "RL" 
-                    ? "bg-red-500 text-white" 
-                    : "bg-blue-500 text-white"
-                }`}>
-                  {QC_POSTS[0].type}
-                </span>
-                <span className="text-[9px] font-bold text-zinc-300 bg-black/60 px-2 py-0.5 rounded-full backdrop-blur-sm">
-                  {QC_POSTS[0].factory}
-                </span>
-              </div>
-              <div className="absolute bottom-3.5 left-3.5 right-3.5 z-20">
-                <h4 className="text-xs font-black text-white group-hover:text-gold transition-colors truncate">
-                  {QC_POSTS[0].title}
-                </h4>
-                <div className="flex items-center justify-between mt-1 text-[9px] text-zinc-400 font-bold">
-                  <span>{QC_POSTS[0].model}</span>
-                  <span className="flex items-center gap-1 text-gold">
-                    <CheckCircle2 size={10} /> GL {QC_POSTS[0].glVotes}명 • <XCircle size={10} /> RL {QC_POSTS[0].rlVotes}명
-                  </span>
-                </div>
-              </div>
-            </Link>
-          )}
+          {/* QC 새글 리스트 (상단 카드 없이 썸네일 목록으로 꽉채움) */}
+          <div className="space-y-3 mt-2">
+            <AnimatePresence mode="popLayout">
+              {QC_POSTS.slice(0, 6).map((post) => {
+                const statusStyle = 
+                  post.type === "GL" 
+                    ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+                    : post.type === "RL" 
+                    ? "bg-red-500/10 text-red-400 border-red-500/20" 
+                    : "bg-blue-500/10 text-blue-400 border-blue-500/20";
+                
+                const StatusIcon = 
+                  post.type === "GL" 
+                    ? CheckCircle2 
+                    : post.type === "RL" 
+                    ? XCircle 
+                    : HelpCircle;
 
-          {/* 나머지 QC 목록 */}
-          <div className="space-y-2.5">
-            {QC_POSTS.slice(1, 4).map((post) => {
-              const statusStyle = 
-                post.type === "GL" 
-                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
-                  : post.type === "RL" 
-                  ? "bg-red-500/10 text-red-400 border-red-500/20" 
-                  : "bg-blue-500/10 text-blue-400 border-blue-500/20";
-              
-              const StatusIcon = 
-                post.type === "GL" 
-                  ? CheckCircle2 
-                  : post.type === "RL" 
-                  ? XCircle 
-                  : HelpCircle;
-
-              return (
-                <Link
-                  key={post.id}
-                  href={`/qc/${post.id}`}
-                  className="flex items-center gap-3 p-1.5 rounded-xl hover:bg-white/[0.02] transition-colors group cursor-pointer border border-transparent hover:border-white/[0.02] block"
-                >
-                  <img
-                    src={post.images[0]}
-                    alt={post.title}
-                    className="w-10 h-10 rounded-lg object-cover bg-zinc-900 border border-white/[0.06] shrink-0"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className={`text-[8px] font-black border px-1 rounded flex items-center gap-0.5 ${statusStyle}`}>
-                        <StatusIcon size={8} /> {post.type}
-                      </span>
-                      <span className="text-[9px] text-zinc-500 font-bold">
-                        {post.factory}
-                      </span>
+                return (
+                  <Link
+                    key={post.id}
+                    href={`/qc/${post.id}`}
+                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/[0.02] transition-colors group cursor-pointer border border-transparent hover:border-white/[0.02] block"
+                  >
+                    <img
+                      src={post.images[0]}
+                      alt={post.title}
+                      className="w-12 h-12 rounded-lg object-cover bg-zinc-900 border border-white/[0.06] shrink-0"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`text-[8px] font-black border px-1 rounded flex items-center gap-0.5 ${statusStyle}`}>
+                          <StatusIcon size={8} /> {post.type}
+                        </span>
+                        <span className="text-[9px] text-zinc-500 font-bold">
+                          {post.factory}
+                        </span>
+                      </div>
+                      <h4 className="text-[11px] font-bold text-zinc-200 group-hover:text-gold transition-colors truncate mt-1">
+                        {post.title}
+                      </h4>
+                      <div className="flex items-center gap-2 mt-0.5 text-[9px] text-zinc-500 font-bold">
+                        <span>{post.time}</span>
+                        <span>•</span>
+                        <span className="flex items-center gap-0.5">
+                          <Eye size={10} /> {post.views}
+                        </span>
+                        <span className="ml-auto text-zinc-400 flex items-center gap-0.5">
+                          GL {post.glVotes} • RL {post.rlVotes}
+                        </span>
+                      </div>
                     </div>
-                    <h4 className="text-[11px] font-bold text-zinc-200 group-hover:text-gold transition-colors truncate mt-1">
-                      {post.title}
-                    </h4>
-                    <div className="flex items-center gap-2 mt-0.5 text-[9px] text-zinc-500 font-bold">
-                      <span>{post.time}</span>
-                      <span>•</span>
-                      <span className="flex items-center gap-0.5">
-                        <Eye size={10} /> {post.views}
-                      </span>
-                      <span className="ml-auto text-zinc-400 flex items-center gap-0.5">
-                        GL {post.glVotes} • RL {post.rlVotes}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+                  </Link>
+                );
+              })}
+            </AnimatePresence>
           </div>
         </div>
       </div>
