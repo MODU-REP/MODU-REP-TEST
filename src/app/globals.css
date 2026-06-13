@@ -1,26 +1,221 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  --color-gold: #C8A96E;
+  --color-gold-light: #D4BC8B;
+  --color-gold-dark: #A68B4B;
+  --color-gold-50: rgba(200, 169, 110, 0.05);
+  --color-gold-100: rgba(200, 169, 110, 0.1);
+  --color-gold-200: rgba(200, 169, 110, 0.2);
+  --color-surface: #111111;
+  --color-surface-2: #1A1A1A;
+  --color-surface-3: #222222;
+  --color-surface-4: #2A2A2A;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --background: #0A0A0A;
+  --foreground: #F5F5F5;
+  --card: #111111;
+  --card-foreground: #F5F5F5;
+  --popover: #111111;
+  --popover-foreground: #F5F5F5;
+  --primary: #C8A96E;
+  --primary-foreground: #0A0A0A;
+  --secondary: #1A1A1A;
+  --secondary-foreground: #F5F5F5;
+  --muted: #1A1A1A;
+  --muted-foreground: #888888;
+  --accent: #1A1A1A;
+  --accent-foreground: #F5F5F5;
+  --destructive: #EF4444;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #C8A96E;
+  --chart-1: #C8A96E;
+  --chart-2: #22C55E;
+  --chart-3: #3B82F6;
+  --chart-4: #F59E0B;
+  --chart-5: #EF4444;
+  --radius: 0.75rem;
+  --sidebar: #0A0A0A;
+  --sidebar-foreground: #F5F5F5;
+  --sidebar-primary: #C8A96E;
+  --sidebar-primary-foreground: #0A0A0A;
+  --sidebar-accent: #1A1A1A;
+  --sidebar-accent-foreground: #F5F5F5;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #C8A96E;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─── Custom Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0A0A0A; }
+::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #C8A96E; }
+
+/* ─── Glassmorphism ─── */
+.glass {
+  background: rgba(17, 17, 17, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.glass-gold {
+  background: rgba(200, 169, 110, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(200, 169, 110, 0.15);
+}
+.glass-card {
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.glass-card:hover {
+  background: rgba(24, 24, 24, 0.8);
+  border-color: rgba(200, 169, 110, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(200, 169, 110, 0.05);
+}
+
+/* ─── Gold Gradient Text ─── */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #C8A96E 0%, #E8D5A8 50%, #C8A96E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Shimmer Effect ─── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, rgba(200, 169, 110, 0) 0%, rgba(200, 169, 110, 0.08) 50%, rgba(200, 169, 110, 0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+/* ─── Rank Badges ─── */
+.rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); }
+.rank-2 { background: linear-gradient(135deg, #C0C0C0, #A0A0A0); }
+.rank-3 { background: linear-gradient(135deg, #CD7F32, #A0522D); }
+
+/* ─── Hide Scrollbar ─── */
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+
+/* ─── Animations ─── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+.pulse-dot { animation: pulse-dot 2s infinite; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float-delayed { animation: float 6s ease-in-out 2s infinite; }
+
+/* ─── Price Trend Colors ─── */
+.trend-up { color: #22C55E; }
+.trend-down { color: #EF4444; }
+
+/* ─── Glow Effects ─── */
+.glow-gold {
+  box-shadow: 0 0 20px rgba(200, 169, 110, 0.15), 0 0 60px rgba(200, 169, 110, 0.05);
+}
+
+/* ─── Card Hover Transform ─── */
+.card-hover {
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* ─── Section Divider ─── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(200, 169, 110, 0.15), transparent);
+}
+
+/* ─── Active Nav ─── */
+.nav-active {
+  color: #C8A96E !important;
+  position: relative;
+}
+.nav-active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 16px;
+  height: 2px;
+  background: #C8A96E;
+  border-radius: 1px;
 }
