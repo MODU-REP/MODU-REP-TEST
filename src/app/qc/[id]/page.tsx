@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { 
   ArrowLeft, 
@@ -24,19 +24,48 @@ interface PageProps {
 export default function QCDetailPage({ params }: PageProps) {
   const resolvedParams = React.use(params);
   const qcId = parseInt(resolvedParams.id);
-  const post = QC_POSTS.find((q) => q.id === qcId);
+
+  const [post, setPost] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   // 이미지 슬라이더 인덱스
   const [activeImg, setActiveImg] = useState(0);
 
   // 투표 및 댓글 로컬 상태 관리
-  const [glVotes, setGlVotes] = useState(() => post?.glVotes || 0);
-  const [rlVotes, setRlVotes] = useState(() => post?.rlVotes || 0);
+  const [glVotes, setGlVotes] = useState(0);
+  const [rlVotes, setRlVotes] = useState(0);
   const [hasVoted, setHasVoted] = useState<"GL" | "RL" | null>(null);
 
-  const [comments, setComments] = useState<QCComment[]>(() => post?.comments || []);
+  const [comments, setComments] = useState<QCComment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [verdict, setVerdict] = useState<"GL" | "RL" | "COMMENT">("GL");
+
+  useEffect(() => {
+    let loadedPosts = QC_POSTS;
+    const stored = localStorage.getItem("qc_posts");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        loadedPosts = [...parsed, ...QC_POSTS];
+      } catch (e) {}
+    }
+    const found = loadedPosts.find((q) => q.id === qcId);
+    if (found) {
+      setPost(found);
+      setGlVotes(found.glVotes);
+      setRlVotes(found.rlVotes);
+      setComments(found.comments || []);
+    }
+    setLoading(false);
+  }, [qcId]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-black">
+        <p className="text-zinc-500 font-bold text-sm">불러오는 중...</p>
+      </div>
+    );
+  }
 
   if (!post) {
     return (
@@ -177,7 +206,7 @@ export default function QCDetailPage({ params }: PageProps) {
 
             {/* Thumbnail selector */}
             <div className="flex gap-2.5 overflow-x-auto hide-scrollbar py-1">
-              {post.images.map((img, i) => (
+              {post.images.map((img: string, i: number) => (
                 <button
                   key={i}
                   onClick={() => setActiveImg(i)}

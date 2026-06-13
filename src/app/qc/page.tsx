@@ -1,26 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Camera, Eye, MessageSquare, Clock, Search, CheckCircle2, XCircle, HelpCircle } from "lucide-react";
+import { Camera, Eye, Search, CheckCircle2, XCircle, HelpCircle } from "lucide-react";
 import Link from "next/link";
 import { QC_POSTS } from "@/lib/data";
 
 const TABS = ["전체", "시계", "가방"];
 const TYPE_FILTERS = ["전체", "QC", "GL", "RL"];
 
-const typeColors: Record<string, string> = {
-  QC: "bg-blue-500/20 text-blue-400 border-blue-500/20",
-  GL: "bg-emerald-500/20 text-emerald-400 border-emerald-500/20",
-  RL: "bg-red-500/20 text-red-400 border-red-500/20",
-};
-
 export default function QCPage() {
   const [category, setCategory] = useState("전체");
   const [typeFilter, setTypeFilter] = useState("전체");
   const [search, setSearch] = useState("");
+  const [posts, setPosts] = useState<any[]>([]);
 
-  const filtered = QC_POSTS.filter((item) => {
+  useEffect(() => {
+    let loaded = QC_POSTS;
+    const stored = localStorage.getItem("qc_posts");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        loaded = [...parsed, ...QC_POSTS];
+      } catch (e) {
+        loaded = QC_POSTS;
+      }
+    } else {
+      localStorage.setItem("qc_posts", JSON.stringify([]));
+    }
+    setPosts(loaded);
+  }, []);
+
+  const filtered = posts.filter((item) => {
     const matchCat = category === "전체" || item.category === category;
     const matchType = typeFilter === "전체" || item.type === typeFilter;
     const matchSearch = 
@@ -31,14 +42,14 @@ export default function QCPage() {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-16 lg:pb-0">
       <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-6">
         
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">QC 갤러리 &amp; 판독 연구소</h1>
-            <p className="text-sm text-zinc-500 mt-1">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight">QC 갤러리 &amp; 판독 연구소</h1>
+            <p className="text-xs sm:text-sm text-zinc-500 mt-1">
               공장에서 갓 도착한 출고(QC) 사진들을 정밀 검증하고, 회원들과 함께 합격(GL) 또는 재요청(RL) 의견을 나눠보세요.
             </p>
           </div>
@@ -98,69 +109,73 @@ export default function QCPage() {
           </div>
         </div>
 
-        {/* QC Cards Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filtered.map((item, i) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: i * 0.03 }}
-            >
-              <Link href={`/qc/${item.id}`} className="block glass rounded-2xl overflow-hidden card-hover group border border-white/[0.05] bg-[#111111]/30">
-                <div className="relative aspect-square overflow-hidden bg-zinc-950">
-                  <img 
-                    src={item.images[0]} 
-                    alt={item.title} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                  
-                  {/* Status tag */}
-                  <span className={`absolute top-2.5 left-2.5 text-[9px] font-black px-2 py-0.5 rounded border backdrop-blur-md ${
-                    typeColors[item.type] || "bg-zinc-700/80 text-zinc-300 border-zinc-600/30"
-                  }`}>
-                    {item.type}
-                  </span>
-                  
-                  {/* Category badge */}
-                  <span className="absolute top-2.5 right-2.5 text-[9px] font-bold px-2 py-0.5 rounded-full bg-black/60 text-zinc-400 backdrop-blur-sm">
-                    {item.category}
-                  </span>
-                  
-                  {/* Factory overlay */}
-                  <div className="absolute bottom-2.5 left-2.5 right-2.5">
-                    <span className="text-[9px] font-bold text-gold uppercase tracking-wider block">
-                      {item.factory}
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="p-4">
-                  <h3 className="text-xs font-black text-white group-hover:text-gold transition-colors truncate mb-1">
-                    {item.title}
-                  </h3>
-                  <p className="text-[10px] text-zinc-500 truncate font-semibold">
-                    {item.model}
-                  </p>
-                  
-                  <div className="flex items-center justify-between mt-3 text-[9px] text-zinc-500 font-bold border-t border-white/[0.04] pt-3">
-                    <span>{item.author}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="flex items-center gap-0.5"><Eye size={10} /> {item.views}</span>
-                      <span className="flex items-center gap-0.5"><MessageSquare size={10} /> {item.commentsCount}</span>
+        {/* QC List Layout (Unified compact list style) */}
+        <div className="w-[calc(100%+2rem)] -mx-4 sm:w-full sm:mx-0 bg-[#111111]/60 backdrop-blur-md border-x-0 border-y sm:border border-white/[0.05] rounded-none sm:rounded-2xl p-4 sm:p-5 shadow-xl shadow-black/20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filtered.map((item, i) => {
+              const statusStyle = 
+                item.type === "GL" 
+                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" 
+                  : item.type === "RL" 
+                  ? "bg-red-500/10 text-red-400 border-red-500/20" 
+                  : "bg-blue-500/10 text-blue-400 border-blue-500/20";
+              
+              const StatusIcon = 
+                item.type === "GL" 
+                  ? CheckCircle2 
+                  : item.type === "RL" 
+                  ? XCircle 
+                  : HelpCircle;
+
+              return (
+                <motion.div
+                  key={item.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2, delay: i * 0.02 }}
+                >
+                  <Link
+                    href={`/qc/${item.id}`}
+                    className="w-full min-w-0 flex items-center gap-3 p-2 rounded-xl hover:bg-white/[0.02] transition-colors group cursor-pointer border border-transparent hover:border-white/[0.02]"
+                  >
+                    <img
+                      src={item.images[0]}
+                      alt={item.title}
+                      className="w-12 h-12 rounded-lg object-cover bg-zinc-900 border border-white/[0.06] shrink-0"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className={`text-[8px] font-black border px-1 rounded flex items-center gap-0.5 ${statusStyle}`}>
+                          <StatusIcon size={8} /> {item.type}
+                        </span>
+                        <span className="text-[9px] text-zinc-500 font-bold">
+                          {item.factory}
+                        </span>
+                        <span className="text-[8px] font-bold text-zinc-500 bg-white/[0.03] border border-white/[0.06] px-1.5 py-0.25 rounded">
+                          {item.category}
+                        </span>
+                      </div>
+                      <h4 className="text-[11px] font-bold text-zinc-200 group-hover:text-gold transition-colors line-clamp-2 whitespace-normal break-all mt-1">
+                        {item.title}
+                      </h4>
+                      <div className="flex items-center gap-2 mt-0.5 text-[9px] text-zinc-500 font-bold">
+                        <span>{item.author}</span>
+                        <span>•</span>
+                        <span>{item.time}</span>
+                        <span>•</span>
+                        <span className="flex items-center gap-0.5">
+                          <Eye size={10} /> {item.views}
+                        </span>
+                        <span className="ml-auto text-gold flex items-center gap-0.5">
+                          GL {item.glVotes} • RL {item.rlVotes}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between mt-2 text-[9px] text-zinc-600 font-bold">
-                    <span>{item.time}</span>
-                    <span className="text-gold flex items-center gap-1">
-                      GL {item.glVotes} • RL {item.rlVotes}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                  </Link>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
 
         {filtered.length === 0 && (

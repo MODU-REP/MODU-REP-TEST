@@ -127,7 +127,7 @@ export function Header() {
       </div>
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="lg:hidden border-t border-white/[0.06] overflow-hidden">
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="lg:hidden border-t border-white/[0.06] overflow-hidden bg-[#0A0A0A] shadow-2xl z-50">
             <nav className="max-w-[1400px] mx-auto px-4 py-3 flex flex-col gap-1">
               {NAV_ITEMS.map((item) => {
                 const isActive = pathname === item.href;
