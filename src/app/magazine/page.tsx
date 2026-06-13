@@ -34,7 +34,7 @@ export default function MagazinePage() {
       <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-8">
         
         {/* Category Navigation */}
-        <div className="flex gap-1.5 mb-8 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04]">
+        <div className="flex flex-nowrap items-center gap-1.5 mb-8 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04] touch-pan-x select-none">
           {TABS.map((tab) => (
             <button
               key={tab}

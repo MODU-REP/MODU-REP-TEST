@@ -162,7 +162,11 @@
 .rank-3 { background: linear-gradient(135deg, #CD7F32, #A0522D); }
 
 /* ─── Hide Scrollbar ─── */
-.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.hide-scrollbar { 
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
+  -webkit-overflow-scrolling: touch; 
+}
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 
 /* ─── Animations ─── */

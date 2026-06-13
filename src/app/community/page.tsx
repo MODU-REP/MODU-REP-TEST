@@ -109,7 +109,7 @@ export default function CommunityPage() {
           {/* Main List */}
           <div>
             {/* Tab Navigation */}
-            <div className="flex items-center gap-1.5 mb-4 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04]">
+            <div className="flex flex-nowrap items-center gap-1.5 mb-4 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04] touch-pan-x select-none">
               {TABS.map((tab) => (
                 <button 
                   key={tab} 

@@ -88,7 +88,7 @@ export function HomeDashboard() {
           </div>
 
           {/* 카테고리 필터 탭 */}
-          <div className="flex flex-wrap gap-1.5 mb-4">
+          <div className="flex flex-nowrap items-center gap-1.5 mb-4 overflow-x-auto hide-scrollbar pb-1 touch-pan-x select-none shrink-0">
             {["전체", "초보 가이드", "정보", "Q&A", "자유"].map((tab) => (
               <button
                 key={tab}
