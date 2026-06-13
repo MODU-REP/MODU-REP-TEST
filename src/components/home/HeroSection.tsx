@@ -48,7 +48,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative w-full overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0A0A0A] mt-2 mb-6 shadow-2xl shadow-black/40 min-h-[460px] sm:min-h-[500px] lg:min-h-[480px] flex flex-col justify-center">
+    <section className="relative w-[calc(100%+2rem)] -mx-4 sm:w-full sm:mx-0 overflow-hidden rounded-none sm:rounded-2xl border-x-0 border-y sm:border border-white/[0.06] bg-[#0A0A0A] mt-2 mb-6 shadow-2xl shadow-black/40 min-h-[460px] sm:min-h-[500px] lg:min-h-[480px] flex flex-col justify-center">
       {/* Sliding Background Image Carousel */}
       {/* On desktop (lg), restrict width to 65% and align right to prevent upscaling blurriness and keep it sharp */}
       <div className="absolute inset-y-0 right-0 w-full lg:w-[65%] z-0">

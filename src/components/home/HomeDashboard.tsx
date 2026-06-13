@@ -95,10 +95,10 @@ export function HomeDashboard() {
   const popularModels = popularTab === "시계" ? POPULAR_WATCHES : POPULAR_BAGS;
 
   return (
-    <section className="grid lg:grid-cols-3 gap-5 mt-2 mb-8">
+    <section className="grid lg:grid-cols-3 gap-5 mt-2 mb-8 w-[calc(100%+2rem)] -mx-4 sm:w-full sm:mx-0">
       
       {/* 1열: 실시간 커뮤니티 피드 */}
-      <div className="bg-[#111111]/60 backdrop-blur-md border border-white/[0.05] rounded-2xl p-5 flex flex-col justify-between shadow-xl shadow-black/20">
+      <div className="bg-[#111111]/60 backdrop-blur-md border-x-0 border-y sm:border border-white/[0.05] rounded-none sm:rounded-2xl p-5 flex flex-col justify-between shadow-xl shadow-black/20">
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="flex items-center gap-2 text-[15px] font-bold text-white tracking-tight">
@@ -180,7 +180,7 @@ export function HomeDashboard() {
       </div>
 
       {/* 2열: 실시간 QC 피드 (QC 새글) */}
-      <div className="bg-[#111111]/60 backdrop-blur-md border border-white/[0.05] rounded-2xl p-5 flex flex-col justify-between shadow-xl shadow-black/20">
+      <div className="bg-[#111111]/60 backdrop-blur-md border-x-0 border-y sm:border border-white/[0.05] rounded-none sm:rounded-2xl p-5 flex flex-col justify-between shadow-xl shadow-black/20">
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="flex items-center gap-2 text-[15px] font-bold text-white tracking-tight">
@@ -214,7 +214,7 @@ export function HomeDashboard() {
                   <Link
                     key={post.id}
                     href={`/qc/${post.id}`}
-                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/[0.02] transition-colors group cursor-pointer border border-transparent hover:border-white/[0.02] block"
+                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/[0.02] transition-colors group cursor-pointer border border-transparent hover:border-white/[0.02]"
                   >
                     <img
                       src={post.images[0]}
@@ -253,7 +253,7 @@ export function HomeDashboard() {
       </div>
 
       {/* 3열: 실시간 인기 TOP 5 */}
-      <div className="bg-[#111111]/60 backdrop-blur-md border border-white/[0.05] rounded-2xl p-5 flex flex-col justify-between shadow-xl shadow-black/20">
+      <div className="bg-[#111111]/60 backdrop-blur-md border-x-0 border-y sm:border border-white/[0.05] rounded-none sm:rounded-2xl p-5 flex flex-col justify-between shadow-xl shadow-black/20">
         <div>
           <div className="flex items-center justify-between mb-4">
             <h3 className="flex items-center gap-2 text-[15px] font-bold text-white tracking-tight">
@@ -298,7 +298,7 @@ export function HomeDashboard() {
                 <Link
                   key={model.rank}
                   href="/qc"
-                  className="flex items-center gap-3 p-1.5 rounded-xl border border-transparent hover:border-white/[0.04] hover:bg-white/[0.02] transition-all group cursor-pointer block"
+                  className="flex items-center gap-3 p-1.5 rounded-xl border border-transparent hover:border-white/[0.04] hover:bg-white/[0.02] transition-all group cursor-pointer"
                 >
                   {/* 순위 번호 뱃지 */}
                   <span className={`w-5 h-5 rounded ${badgeStyle} text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm`}>
