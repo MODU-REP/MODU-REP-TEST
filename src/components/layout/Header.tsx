@@ -29,10 +29,10 @@ export function Header() {
           <div className="flex items-center gap-3">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-1.5 rounded-lg hover:bg-white/5 transition-colors"
+              className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-zinc-400 hover:text-white transition-colors"
               aria-label="메뉴"
             >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
             </button>
 
             <Link href="/" className="flex items-center group">
@@ -41,7 +41,7 @@ export function Header() {
                 alt="MODUREP 모두의 렙"
                 width={240}
                 height={94}
-                className="h-10 md:h-12 w-auto object-contain"
+                className="h-[25px] lg:h-[32px] w-auto object-contain"
                 priority
               />
             </Link>
@@ -109,15 +109,15 @@ export function Header() {
                 )}
               </AnimatePresence>
             </div>
-            <button className="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors" aria-label="검색">
-              <Search size={18} className="text-zinc-400" />
+            <button className="md:hidden w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-zinc-400 hover:text-white transition-colors" aria-label="검색">
+              <Search size={18} />
             </button>
-            <button className="relative p-2 rounded-lg hover:bg-white/5 transition-colors">
-              <Bell size={18} className="text-zinc-400" />
-              <span className="absolute top-0.5 right-0.5 min-w-[16px] h-4 bg-red-500 rounded-full text-[9px] flex items-center justify-center font-bold px-1">12</span>
+            <button className="relative w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-zinc-400 hover:text-white transition-colors">
+              <Bell size={18} />
+              <span className="absolute -top-0.5 -right-0.5 min-w-[15px] h-[15px] bg-red-500 rounded-full text-[8px] flex items-center justify-center font-bold px-0.5 text-white">12</span>
             </button>
-            <button className="hidden sm:flex relative p-2 rounded-lg hover:bg-white/5 transition-colors">
-              <MessageSquare size={18} className="text-zinc-400" />
+            <button className="hidden sm:flex relative w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/5 text-zinc-400 hover:text-white transition-colors">
+              <MessageSquare size={18} />
             </button>
             <button className="w-8 h-8 rounded-full bg-gradient-to-br from-gold to-gold-dark flex items-center justify-center text-sm font-bold text-black ml-1 hover:shadow-lg hover:shadow-gold/20 transition-shadow">
               <User size={15} />
