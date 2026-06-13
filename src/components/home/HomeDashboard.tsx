@@ -1,13 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   MessageSquare, 
   Heart, 
   Eye, 
   ChevronRight, 
-  ChevronLeft,
   Star, 
   Camera, 
   CheckCircle2, 
@@ -49,19 +48,6 @@ export function HomeDashboard() {
 
   const [posts, setPosts] = useState<CommunityPost[]>([]);
 
-  // 가로 스크롤 버튼 상태 및 참조
-  const tabsRef = useRef<HTMLDivElement>(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(true);
-
-  const checkScroll = () => {
-    if (tabsRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
-      setShowLeftArrow(scrollLeft > 10);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
-
   useEffect(() => {
     let loadedPosts = COMMUNITY_POSTS;
     const stored = localStorage.getItem("community_posts");
@@ -76,21 +62,6 @@ export function HomeDashboard() {
     }
     setPosts(loadedPosts);
   }, []);
-
-  useEffect(() => {
-    const el = tabsRef.current;
-    if (el) {
-      el.addEventListener("scroll", checkScroll);
-      checkScroll();
-      const t = setTimeout(checkScroll, 100);
-      window.addEventListener("resize", checkScroll);
-      return () => {
-        if (el) el.removeEventListener("scroll", checkScroll);
-        window.removeEventListener("resize", checkScroll);
-        clearTimeout(t);
-      };
-    }
-  }, [posts]);
 
   // 커뮤니티 필터링 로직
   const filteredCommPosts = posts.filter(post => {
@@ -116,52 +87,21 @@ export function HomeDashboard() {
             </Link>
           </div>
 
-          {/* 카테고리 필터 탭 with Slide Buttons */}
-          <div className="relative mb-4 group/tabs shrink-0 w-full max-w-full overflow-hidden">
-            {showLeftArrow && (
+          {/* 카테고리 필터 탭 */}
+          <div className="flex flex-wrap gap-1.5 mb-4">
+            {["전체", "초보 가이드", "정보", "Q&A", "자유"].map((tab) => (
               <button
-                type="button"
-                onClick={() => {
-                  tabsRef.current?.scrollBy({ left: -100, behavior: "smooth" });
-                }}
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-6 h-6 rounded-full bg-black/85 border border-white/10 flex items-center justify-center text-white hover:text-gold transition-colors shadow-lg cursor-pointer"
-                aria-label="이전 카테고리"
+                key={tab}
+                onClick={() => setCommTab(tab)}
+                className={`px-3 py-1 rounded-full text-[10px] font-bold border transition-all duration-300 ${
+                  commTab === tab
+                    ? "bg-gold text-black border-transparent shadow-sm shadow-gold/10"
+                    : "bg-white/[0.02] text-zinc-400 border-white/[0.03] hover:text-white hover:bg-white/[0.05]"
+                }`}
               >
-                <ChevronLeft size={12} />
+                {tab}
               </button>
-            )}
-
-            <div 
-              ref={tabsRef}
-              className="flex flex-nowrap items-center gap-1.5 overflow-x-auto hide-scrollbar pb-1 scroll-smooth w-full"
-            >
-              {["전체", "초보 가이드", "정보", "Q&A", "자유"].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setCommTab(tab)}
-                  className={`px-3 py-1 rounded-full text-[10px] font-bold border transition-all duration-300 shrink-0 ${
-                    commTab === tab
-                      ? "bg-gold text-black border-transparent shadow-sm shadow-gold/10"
-                      : "bg-white/[0.02] text-zinc-400 border-white/[0.03] hover:text-white hover:bg-white/[0.05]"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-
-            {showRightArrow && (
-              <button
-                type="button"
-                onClick={() => {
-                  tabsRef.current?.scrollBy({ left: 100, behavior: "smooth" });
-                }}
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-6 h-6 rounded-full bg-black/85 border border-white/10 flex items-center justify-center text-white hover:text-gold transition-colors shadow-lg cursor-pointer"
-                aria-label="다음 카테고리"
-              >
-                <ChevronRight size={12} />
-              </button>
-            )}
+            ))}
           </div>
 
           {/* 게시글 목록 */}

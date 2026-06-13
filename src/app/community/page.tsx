@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, Eye, ThumbsUp, Flame, ChevronRight, ChevronLeft, TrendingUp, Star, Search, PenLine, Image as ImageIcon } from "lucide-react";
+import { MessageSquare, Eye, ThumbsUp, Flame, ChevronRight, TrendingUp, Star, Search, PenLine, Image as ImageIcon } from "lucide-react";
 import Link from "next/link";
 import { COMMUNITY_POSTS, COMMUNITY_NOTICES, POPULAR_MODELS, SEARCH_TRENDING, FACTORY_RANKINGS, CommunityPost } from "@/lib/data";
 
@@ -22,35 +22,6 @@ export default function CommunityPage() {
 
   // 로컬 저장소 연동 포스트 상태
   const [posts, setPosts] = useState<CommunityPost[]>([]);
-
-  // 가로 스크롤 버튼 상태 및 참조
-  const tabsRef = useRef<HTMLDivElement>(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(true);
-
-  const checkScroll = () => {
-    if (tabsRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
-      setShowLeftArrow(scrollLeft > 10);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
-
-  useEffect(() => {
-    const el = tabsRef.current;
-    if (el) {
-      el.addEventListener("scroll", checkScroll);
-      // 초기 검사 및 지연 검사
-      checkScroll();
-      const t = setTimeout(checkScroll, 100);
-      window.addEventListener("resize", checkScroll);
-      return () => {
-        if (el) el.removeEventListener("scroll", checkScroll);
-        window.removeEventListener("resize", checkScroll);
-        clearTimeout(t);
-      };
-    }
-  }, [posts]);
 
   // 검색 상태
   const [searchType, setSearchType] = useState("제목+내용");
@@ -137,55 +108,24 @@ export default function CommunityPage() {
         <div className="grid lg:grid-cols-[1fr_280px] gap-6">
           {/* Main List */}
           <div>
-            {/* Tab Navigation with Slide Buttons */}
-            <div className="relative mb-4 group/tabs w-full max-w-full overflow-hidden">
-              {showLeftArrow && (
-                <button
-                  type="button"
+            {/* Tab Navigation */}
+            <div className="flex items-center gap-1.5 mb-4 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04]">
+              {TABS.map((tab) => (
+                <button 
+                  key={tab} 
                   onClick={() => {
-                    tabsRef.current?.scrollBy({ left: -150, behavior: "smooth" });
-                  }}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-black/85 border border-white/10 flex items-center justify-center text-white hover:text-gold transition-colors shadow-lg cursor-pointer"
-                  aria-label="이전 카테고리"
+                    setActiveTab(tab);
+                    setCurrentPage(1);
+                  }} 
+                  className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-full whitespace-nowrap transition-all duration-200 ${
+                    activeTab === tab 
+                      ? "bg-gold text-black font-bold" 
+                      : "bg-white/[0.02] text-zinc-400 hover:bg-white/[0.05] hover:text-white border border-white/[0.04]"
+                  }`}
                 >
-                  <ChevronLeft size={14} />
+                  {tab}
                 </button>
-              )}
-              
-              <div 
-                ref={tabsRef}
-                className="flex flex-nowrap items-center gap-1.5 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04] scroll-smooth w-full"
-              >
-                {TABS.map((tab) => (
-                  <button 
-                    key={tab} 
-                    onClick={() => {
-                      setActiveTab(tab);
-                      setCurrentPage(1);
-                    }} 
-                    className={`px-4 py-2 text-xs sm:text-sm font-bold rounded-full whitespace-nowrap transition-all duration-200 ${
-                      activeTab === tab 
-                        ? "bg-gold text-black font-bold" 
-                        : "bg-white/[0.02] text-zinc-400 hover:bg-white/[0.05] hover:text-white border border-white/[0.04]"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-
-              {showRightArrow && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    tabsRef.current?.scrollBy({ left: 150, behavior: "smooth" });
-                  }}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-black/85 border border-white/10 flex items-center justify-center text-white hover:text-gold transition-colors shadow-lg cursor-pointer"
-                  aria-label="다음 카테고리"
-                >
-                  <ChevronRight size={14} />
-                </button>
-              )}
+              ))}
             </div>
 
             {/* Post Listings (DCInside Table Style) */}

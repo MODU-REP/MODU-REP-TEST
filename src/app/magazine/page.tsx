@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Clock, Eye, ChevronRight, ChevronLeft, BookOpen } from "lucide-react";
+import { Clock, Eye, ChevronRight, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { MAGAZINE_ARTICLES } from "@/lib/data";
 
@@ -10,33 +10,6 @@ const TABS = ["전체", "브랜드 역사", "라이프스타일", "마켓 워치
 
 export default function MagazinePage() {
   const [activeTab, setActiveTab] = useState("전체");
-
-  const tabsRef = useRef<HTMLDivElement>(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(true);
-
-  const checkScroll = () => {
-    if (tabsRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
-      setShowLeftArrow(scrollLeft > 10);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
-
-  useEffect(() => {
-    const el = tabsRef.current;
-    if (el) {
-      el.addEventListener("scroll", checkScroll);
-      checkScroll();
-      const t = setTimeout(checkScroll, 100);
-      window.addEventListener("resize", checkScroll);
-      return () => {
-        if (el) el.removeEventListener("scroll", checkScroll);
-        window.removeEventListener("resize", checkScroll);
-        clearTimeout(t);
-      };
-    }
-  }, []);
 
   const filtered = activeTab === "전체" 
     ? MAGAZINE_ARTICLES 
@@ -60,52 +33,21 @@ export default function MagazinePage() {
 
       <div className="max-w-[1400px] mx-auto px-4 lg:px-6 py-8">
         
-        {/* Category Navigation with Slide Buttons */}
-        <div className="relative mb-8 group/tabs w-full max-w-full overflow-hidden">
-          {showLeftArrow && (
+        {/* Category Navigation */}
+        <div className="flex gap-1.5 mb-8 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04]">
+          {TABS.map((tab) => (
             <button
-              type="button"
-              onClick={() => {
-                tabsRef.current?.scrollBy({ left: -150, behavior: "smooth" });
-              }}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-black/85 border border-white/10 flex items-center justify-center text-white hover:text-gold transition-colors shadow-lg cursor-pointer"
-              aria-label="이전 카테고리"
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-5 py-2.5 text-xs font-bold rounded-full whitespace-nowrap transition-all duration-300 ${
+                activeTab === tab 
+                  ? "bg-gold text-black shadow-lg shadow-gold/15" 
+                  : "bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.05] border border-white/[0.03]"
+              }`}
             >
-              <ChevronLeft size={14} />
+              {tab}
             </button>
-          )}
-
-          <div 
-            ref={tabsRef}
-            className="flex flex-nowrap items-center gap-1.5 overflow-x-auto hide-scrollbar pb-1 border-b border-white/[0.04] scroll-smooth w-full"
-          >
-            {TABS.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-5 py-2.5 text-xs font-bold rounded-full whitespace-nowrap transition-all duration-300 ${
-                  activeTab === tab 
-                    ? "bg-gold text-black shadow-lg shadow-gold/15" 
-                    : "bg-white/[0.02] text-zinc-400 hover:text-white hover:bg-white/[0.05] border border-white/[0.03]"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          {showRightArrow && (
-            <button
-              type="button"
-              onClick={() => {
-                tabsRef.current?.scrollBy({ left: 150, behavior: "smooth" });
-              }}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-black/85 border border-white/10 flex items-center justify-center text-white hover:text-gold transition-colors shadow-lg cursor-pointer"
-              aria-label="다음 카테고리"
-            >
-              <ChevronRight size={14} />
-            </button>
-          )}
+          ))}
         </div>
 
         {/* Featured Stories (First 2) */}
