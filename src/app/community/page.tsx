@@ -146,7 +146,7 @@ export default function CommunityPage() {
             {/* Post Listings (DCInside Table Style) */}
             <div className="glass rounded-2xl overflow-hidden border border-white/[0.05] bg-[#111111]/30 shadow-xl">
               <div className="overflow-x-auto">
-                <table className="w-full border-collapse text-left">
+                <table className="w-full table-fixed border-collapse text-left">
                   <thead>
                     <tr className="border-b border-white/[0.08] bg-white/[0.02] text-[11px] font-black text-zinc-400 uppercase tracking-wider">
                       <th className="py-3 px-4 text-center w-16 hidden sm:table-cell">번호</th>
@@ -166,15 +166,15 @@ export default function CommunityPage() {
                             {post.id}
                           </td>
                           {/* 제목 */}
-                          <td className="py-3 px-4">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded border border-white/[0.03] ${categoryColors[post.category] || "bg-zinc-800 text-zinc-300"}`}>
+                          <td className="py-3 px-4 min-w-0">
+                            <div className="flex items-center gap-1.5 min-w-0 w-full">
+                              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded border border-white/[0.03] shrink-0 ${categoryColors[post.category] || "bg-zinc-800 text-zinc-300"}`}>
                                 {post.category}
                               </span>
                               {post.hot && <Flame size={12} className="text-orange-400 shrink-0" />}
                               <Link 
                                 href={`/community/${post.id}`} 
-                                className="text-zinc-200 hover:text-gold font-bold transition-colors truncate max-w-[280px] xs:max-w-[340px] md:max-w-[420px]"
+                                className="text-zinc-200 hover:text-gold font-bold transition-colors truncate min-w-0 flex-1"
                               >
                                 {post.title}
                               </Link>
@@ -189,7 +189,7 @@ export default function CommunityPage() {
                             </div>
                             
                             {/* Mobile Info row */}
-                            <div className="sm:hidden flex items-center gap-2 mt-1.5 text-[9px] text-zinc-500 font-bold">
+                            <div className="sm:hidden flex items-center flex-wrap gap-2 mt-1.5 text-[9px] text-zinc-500 font-bold">
                               <span>{post.author}</span>
                               <span>•</span>
                               <span>{post.time}</span>

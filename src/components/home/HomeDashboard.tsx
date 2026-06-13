@@ -144,15 +144,15 @@ export function HomeDashboard() {
                       {idx + 1}
                     </td>
                     {/* 제목 */}
-                    <td className="py-2.5 px-3">
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className={`text-[8px] font-black px-1.5 py-0.5 rounded border border-white/[0.03] ${categoryColors[post.category] || "bg-zinc-800 text-zinc-400"}`}>
+                    <td className="py-2.5 px-3 min-w-0">
+                      <div className="flex items-center gap-1.5 min-w-0 w-full">
+                        <span className={`text-[8px] font-black px-1.5 py-0.5 rounded border border-white/[0.03] shrink-0 ${categoryColors[post.category] || "bg-zinc-800 text-zinc-400"}`}>
                           {post.category}
                         </span>
                         {post.hot && <Flame size={10} className="text-orange-400 shrink-0" />}
                         <Link 
                           href={`/community/${post.id}`} 
-                          className="text-zinc-300 group-hover:text-gold font-bold transition-colors truncate max-w-[150px] xs:max-w-[200px] md:max-w-[240px]"
+                          className="text-zinc-300 group-hover:text-gold font-bold transition-colors truncate min-w-0 flex-1"
                         >
                           {post.title}
                         </Link>
