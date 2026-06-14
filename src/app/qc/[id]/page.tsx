@@ -14,7 +14,8 @@ import {
   Sliders,
   Send,
   HelpCircle,
-  X
+  X,
+  Check
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { QC_POSTS, QCComment } from "@/lib/data";
@@ -210,6 +211,79 @@ export default function QCDetailPage({ params }: PageProps) {
     );
   }
 
+  // 판매처 / 가격 라벨링 분기
+  const isNumericPrice = post.price && (
+    post.price.includes("₩") || 
+    post.price.includes("원") || 
+    /^\d/.test(post.price.replace(/[\s,]/g, ''))
+  );
+  const priceLabel = isNumericPrice ? "TD 출고가" : "판매처";
+
+  // 카테고리별 궁금한 점/검수 항목 파싱
+  const isWatch = post.category === "시계";
+  const concernsMapping = isWatch 
+    ? [
+        { name: "인덱스", key: "rehaut", defaultDesc: "인덱스 정렬 및 대칭 상태 체크 필요" },
+        { name: "베젤", key: "bezel", defaultDesc: "베젤 인서트 및 마킹 대칭 상태 체크 필요" },
+        { name: "날짜창", key: "datewheel", defaultDesc: "데이트휠 날짜 정렬 및 폰트 상태 체크 필요" },
+        { name: "다이얼", key: "dial", defaultDesc: "다이얼 및 핸즈 정렬 상태 체크 필요" },
+        { name: "전체 검수", key: "clasp", defaultDesc: "버클 마감 및 글라스 투과율 체크 필요" },
+      ]
+    : [
+        { name: "로고/박임", key: "dial", defaultDesc: "로고 각인 깊이 및 박임 상태 체크 필요" },
+        { name: "스티칭/대칭", key: "rehaut", defaultDesc: "스티칭 선 정렬 및 대칭 균형 체크 필요" },
+        { name: "가죽 질감", key: "bezel", defaultDesc: "가죽 가공 상태 및 질감 체크 필요" },
+        { name: "하드웨어/도금", key: "datewheel", defaultDesc: "금속 부자재 도금 퀄리티 및 스크래치 체크 필요" },
+        { name: "전체 검수", key: "clasp", defaultDesc: "가방 형태 및 내부 마감 처리 체크 필요" },
+      ];
+
+  const parsedConcerns = concernsMapping.map((concern) => {
+    const value = post.specs?.[concern.key] || "";
+    
+    // 1. 새 글쓰기 폼에서 넘어온 "검수 요청" 항목
+    if (value.includes("[검수 요청]")) {
+      const regex = /⚠️?\s*\[검수\s*요청\]\s*(.*?)(?:\s*\((.*?)\))?$/;
+      const match = value.match(regex);
+      let desc = concern.defaultDesc;
+      let memo = "";
+      if (match) {
+        desc = match[1] || concern.defaultDesc;
+        memo = match[2] || "";
+      }
+      return {
+        name: concern.name,
+        status: "request",
+        text: desc,
+        memo: memo
+      };
+    }
+    
+    // 2. 새 글쓰기 폼에서 미선택된 항목
+    if (value === "양호 (정상 범위)") {
+      return {
+        name: concern.name,
+        status: "ok",
+        text: "양호 (특이사항 없음)"
+      };
+    }
+    
+    // 3. 기존의 하드코딩된 상세 데이터 (하위 호환성 유지)
+    if (value && value.trim()) {
+      return {
+        name: concern.name,
+        status: "detail",
+        text: value
+      };
+    }
+    
+    // 4. 기본 폴백
+    return {
+      name: concern.name,
+      status: "ok",
+      text: "양호 (특이사항 없음)"
+    };
+  });
+
   const handleVote = (type: "GL" | "RL") => {
     if (hasVoted === type) {
       // 투표 취소
@@ -279,7 +353,7 @@ export default function QCDetailPage({ params }: PageProps) {
                   ? "bg-red-500/20 text-red-400 border-red-500/20" 
                   : "bg-blue-500/20 text-blue-400 border-blue-500/20"
               }`}>
-                {post.type} 판정
+                {post.type === "QC" ? "QC 투표 대기" : post.type === "GL" ? "GL 합격" : "RL 재요청"}
               </span>
               <span className="text-[10px] text-zinc-500 font-bold">
                 {post.factory} • {post.category}
@@ -293,7 +367,7 @@ export default function QCDetailPage({ params }: PageProps) {
             </p>
           </div>
           <div className="text-right sm:text-right shrink-0">
-            <span className="text-[10px] font-bold text-zinc-500 block">TD 출고가</span>
+            <span className="text-[10px] font-bold text-zinc-500 block">{priceLabel}</span>
             <span className="text-xl font-black text-gold">{post.price}</span>
           </div>
         </div>
@@ -432,43 +506,83 @@ export default function QCDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* 📝 Inspection Specifications */}
+            {/* 📋 궁금한 점 & 검수 항목 */}
             <div className="glass rounded-2xl p-5 border border-white/[0.05] bg-[#111111]/30">
-              <h3 className="text-xs font-black uppercase tracking-wider text-white mb-4">
-                페이크포인트 검사 정보
+              <h3 className="text-xs font-black uppercase tracking-wider text-white mb-4 flex items-center gap-1.5">
+                <Sliders size={14} className="text-gold" />
+                궁금한 점 & 검수 항목
               </h3>
               
-              <div className="divide-y divide-white/[0.04] text-xs">
-                <div className="py-2.5 flex items-start justify-between gap-4">
-                  <span className="text-zinc-500 shrink-0 font-bold">
-                    {post.category === "가방" ? "로고 & 각인" : "다이얼 & 핸즈"}
-                  </span>
-                  <span className="text-zinc-300 font-semibold text-right">{post.specs.dial}</span>
-                </div>
-                <div className="py-2.5 flex items-start justify-between gap-4">
-                  <span className="text-zinc-500 shrink-0 font-bold">
-                    {post.category === "가방" ? "가죽 & 패턴" : "베젤 & 인서트"}
-                  </span>
-                  <span className="text-zinc-300 font-semibold text-right">{post.specs.bezel}</span>
-                </div>
-                <div className="py-2.5 flex items-start justify-between gap-4">
-                  <span className="text-zinc-500 shrink-0 font-bold">
-                    {post.category === "가방" ? "스티칭 & 대칭" : "레하우 각인"}
-                  </span>
-                  <span className="text-zinc-300 font-semibold text-right">{post.specs.rehaut}</span>
-                </div>
-                <div className="py-2.5 flex items-start justify-between gap-4">
-                  <span className="text-zinc-500 shrink-0 font-bold">
-                    {post.category === "가방" ? "금속 & 하드웨어" : "날짜창 (DW)"}
-                  </span>
-                  <span className="text-zinc-300 font-semibold text-right">{post.specs.datewheel}</span>
-                </div>
-                <div className="py-2.5 flex items-start justify-between gap-4">
-                  <span className="text-zinc-500 shrink-0 font-bold">
-                    {post.category === "가방" ? "마감 & 버클" : "버클 & 글라스"}
-                  </span>
-                  <span className="text-zinc-300 font-semibold text-right">{post.specs.clasp}</span>
-                </div>
+              <div className="space-y-3">
+                {parsedConcerns.map((item, idx) => {
+                  const isRequest = item.status === "request";
+                  const isDetail = item.status === "detail";
+                  
+                  return (
+                    <div 
+                      key={idx}
+                      className={`p-3.5 rounded-xl border transition-all ${
+                        isRequest 
+                          ? "border-gold/30 bg-gold/[0.03]" 
+                          : isDetail
+                          ? "border-white/[0.08] bg-white/[0.01]"
+                          : "border-white/[0.04] bg-white/[0.005] opacity-60"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-3 mb-1.5">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${
+                            isRequest 
+                              ? "border-gold bg-gold text-black" 
+                              : isDetail
+                              ? "border-zinc-500 bg-zinc-800 text-zinc-300"
+                              : "border-zinc-800 text-zinc-700"
+                          }`}>
+                            {(isRequest || isDetail) && <Check size={10} strokeWidth={3} />}
+                          </div>
+                          <span className={`text-[11px] font-black ${
+                            isRequest ? "text-gold" : "text-zinc-200"
+                          }`}>
+                            {item.name}
+                          </span>
+                        </div>
+                        
+                        {isRequest && (
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-gold/15 text-gold border border-gold/15">
+                            검수 요청
+                          </span>
+                        )}
+                        {isDetail && (
+                          <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400 border border-zinc-700/30">
+                            상세 분석
+                          </span>
+                        )}
+                        {!isRequest && !isDetail && (
+                          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-900/50 text-zinc-600 border border-white/[0.02]">
+                            양호
+                          </span>
+                        )}
+                      </div>
+                      
+                      <p className={`text-[11px] leading-relaxed font-bold ${
+                        isRequest 
+                          ? "text-zinc-300" 
+                          : isDetail 
+                          ? "text-zinc-300" 
+                          : "text-zinc-500"
+                      }`}>
+                        {item.text}
+                      </p>
+                      
+                      {isRequest && item.memo && (
+                        <div className="mt-2 p-2 rounded-lg bg-black/40 border border-white/[0.04] text-[10px] text-zinc-400 leading-normal font-medium">
+                          <span className="text-gold font-bold mr-1">요청 메모:</span>
+                          {item.memo}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -519,7 +633,7 @@ export default function QCDetailPage({ params }: PageProps) {
           {/* Verdict appraisal submit form */}
           <form onSubmit={handleCommentSubmit} className="space-y-3 p-3 bg-white/[0.02] border border-white/[0.06] rounded-2xl">
             <div className="flex items-center justify-between gap-4 border-b border-white/[0.04] pb-3 mb-2">
-              <span className="text-[10px] text-zinc-500 font-black uppercase">판정 선택</span>
+              <span className="text-[10px] text-zinc-500 font-black uppercase">투표 선택</span>
               
               {/* GL / RL / COMMENT Tag Selector */}
               <div className="flex gap-1.5">
