@@ -191,7 +191,7 @@ export default function QCUploadPage() {
                 >
                   {STATUS_TYPES.map((st) => (
                     <option key={st} value={st} className="bg-[#111111] text-white">
-                      {st} ({st === "QC" ? "판독 대기" : st === "GL" ? "자체 합격" : "자체 재요청"})
+                      {st} ({st === "QC" ? "투표 대기" : st === "GL" ? "자체 합격" : "자체 재요청"})
                     </option>
                   ))}
                 </select>

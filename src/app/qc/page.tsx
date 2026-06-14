@@ -48,7 +48,7 @@ export default function QCPage() {
         {/* Header */}
         <div className="mb-6 border-b border-white/[0.05] pb-4 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-black tracking-tight text-white uppercase">QC 판독소</h1>
+            <h1 className="text-2xl font-black tracking-tight text-white uppercase">QC 투표</h1>
             <p className="text-xs sm:text-sm text-zinc-500 mt-1 font-bold">
               공장에서 갓 도착한 출고(QC) 사진들을 정밀 검증하고, 회원들과 함께 합격(GL) 또는 재요청(RL) 의견을 나눠보세요.
             </p>

@@ -380,7 +380,7 @@ export default function QCDetailPage({ params }: PageProps) {
             <div className="glass rounded-2xl p-5 border border-gold/15 bg-gold/[0.02] shadow-xl">
               <h3 className="text-xs font-black uppercase tracking-wider text-white mb-4 flex items-center gap-1.5">
                 <Sliders size={14} className="text-gold" />
-                실시간 커뮤니티 판독 현황
+                실시간 커뮤니티 투표 현황
               </h3>
 
               {/* Progress bar */}
@@ -469,7 +469,7 @@ export default function QCDetailPage({ params }: PageProps) {
         <div className="glass rounded-2xl p-6 border border-white/[0.05] bg-[#111111]/20">
           <h3 className="text-sm font-black text-white mb-6 flex items-center gap-2">
             <MessageSquare size={16} className="text-gold" />
-            판독 코멘트 {comments.length}개
+            투표 코멘트 {comments.length}개
           </h3>
 
           {/* Comment list */}
@@ -543,7 +543,7 @@ export default function QCDetailPage({ params }: PageProps) {
             <div className="flex items-center gap-2 bg-white/[0.03] border border-white/[0.08] rounded-xl p-2 focus-within:border-gold/30 transition-colors">
               <input 
                 type="text" 
-                placeholder="상세 판독 의견을 작성하세요..." 
+                placeholder="상세 투표 의견을 작성하세요..." 
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 className="flex-1 bg-transparent text-xs text-white placeholder:text-zinc-600 focus:outline-none px-2 py-1 font-bold"

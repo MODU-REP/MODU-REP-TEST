@@ -1466,7 +1466,7 @@ A: 초보 가이드 #1부터 #20까지 순서대로 읽으시면 됩니다!
 
 export const COMMUNITY_NOTICES = [
   { id: 1, title: "[필독] 익명 안전 커뮤니티 이용 규칙 및 격추(폐기) 보상 정책 안내", date: "2026.06.01" },
-  { id: 2, title: "[이벤트] 6월의 QC 정밀 판독기 실력자 투표 및 활동 포인트 이벤트", date: "2026.06.05" },
+  { id: 2, title: "[이벤트] 6월의 QC 정밀 투표 실력자 선정 및 활동 포인트 이벤트", date: "2026.06.05" },
   { id: 3, title: "[안내] 해외 TD(신뢰 딜러) 공장 출고 단가 실시간 연동 업데이트 공지", date: "2026.06.03" },
 ];
 
@@ -1711,7 +1711,7 @@ export const LIVE_ACTIVITIES = [
   { id: 1, type: "qc", text: "신규 QC 의뢰글 등록", detail: "Clean Daytona 126500", time: "방금 전", icon: "📸" },
   { id: 2, type: "review", text: "실제 수령 후기 등록", detail: "Chanel CF 187 킹배치", time: "3분 전", icon: "⭐" },
   { id: 3, type: "member", text: "신규 렙매니아 회원 가입", detail: "레플러브님", time: "5분 전", icon: "👤" },
-  { id: 4, type: "comment", text: "QC 판독 댓글 등록 (GL 판정)", detail: "VSF Submariner", time: "7분 전", icon: "💬" },
+  { id: 4, type: "comment", text: "QC 투표 댓글 등록 (GL 판정)", detail: "VSF Submariner", time: "7분 전", icon: "💬" },
 ];
 
 export const QUICK_MENUS = [
