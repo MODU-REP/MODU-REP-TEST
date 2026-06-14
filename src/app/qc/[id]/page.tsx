@@ -440,23 +440,33 @@ export default function QCDetailPage({ params }: PageProps) {
               
               <div className="divide-y divide-white/[0.04] text-xs">
                 <div className="py-2.5 flex items-start justify-between gap-4">
-                  <span className="text-zinc-500 shrink-0 font-bold">다이얼 &amp; 핸즈</span>
+                  <span className="text-zinc-500 shrink-0 font-bold">
+                    {post.category === "가방" ? "로고 & 각인" : "다이얼 & 핸즈"}
+                  </span>
                   <span className="text-zinc-300 font-semibold text-right">{post.specs.dial}</span>
                 </div>
                 <div className="py-2.5 flex items-start justify-between gap-4">
-                  <span className="text-zinc-500 shrink-0 font-bold">베젤 &amp; 인서트</span>
+                  <span className="text-zinc-500 shrink-0 font-bold">
+                    {post.category === "가방" ? "가죽 & 패턴" : "베젤 & 인서트"}
+                  </span>
                   <span className="text-zinc-300 font-semibold text-right">{post.specs.bezel}</span>
                 </div>
                 <div className="py-2.5 flex items-start justify-between gap-4">
-                  <span className="text-zinc-500 shrink-0 font-bold">레하우 각인</span>
+                  <span className="text-zinc-500 shrink-0 font-bold">
+                    {post.category === "가방" ? "스티칭 & 대칭" : "레하우 각인"}
+                  </span>
                   <span className="text-zinc-300 font-semibold text-right">{post.specs.rehaut}</span>
                 </div>
                 <div className="py-2.5 flex items-start justify-between gap-4">
-                  <span className="text-zinc-500 shrink-0 font-bold">날짜창 (DW)</span>
+                  <span className="text-zinc-500 shrink-0 font-bold">
+                    {post.category === "가방" ? "금속 & 하드웨어" : "날짜창 (DW)"}
+                  </span>
                   <span className="text-zinc-300 font-semibold text-right">{post.specs.datewheel}</span>
                 </div>
                 <div className="py-2.5 flex items-start justify-between gap-4">
-                  <span className="text-zinc-500 shrink-0 font-bold">버클 &amp; 글라스</span>
+                  <span className="text-zinc-500 shrink-0 font-bold">
+                    {post.category === "가방" ? "마감 & 버클" : "버클 & 글라스"}
+                  </span>
                   <span className="text-zinc-300 font-semibold text-right">{post.specs.clasp}</span>
                 </div>
               </div>

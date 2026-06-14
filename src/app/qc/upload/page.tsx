@@ -9,30 +9,31 @@ import { QC_POSTS } from "@/lib/data";
 const CATEGORIES = ["시계", "가방"] as const;
 const STATUS_TYPES = ["QC", "GL", "RL"] as const;
 
+const WATCH_CONCERNS = ["인덱스", "베젤", "날짜창", "다이얼", "전체 검수"];
+const BAG_CONCERNS = ["로고/박임", "스티칭/대칭", "가죽 질감", "하드웨어/도금", "전체 검수"];
+
 const PRESET_IMAGES = [
-  { label: "롤렉스 서브마리너 126610LN", value: "/hero_pc_1.png", preview: "/hero_pc_1.png" },
-  { label: "샤넬 클래식 플랩백 (가죽)", value: "/hero_bag_2.png", preview: "/hero_bag_2.png" },
-  { label: "롤렉스 코스모그래프 데이토나", value: "/hero_pc_2.png", preview: "/hero_pc_2.png" },
-  { label: "오메가 스피드마스터 문워치", value: "/hero_pc_3.png", preview: "/hero_pc_3.png" },
-  { label: "롤렉스 데이트저스트 126334", value: "/hero_watch_3.png", preview: "/hero_watch_3.png" },
+  { label: "롤렉스 서브마리너 126610LN", value: "/hero_pc_1.png" },
+  { label: "샤넬 클래식 플랩백 (가죽)", value: "/hero_bag_2.png" },
+  { label: "롤렉스 코스모그래프 데이토나", value: "/hero_pc_2.png" },
+  { label: "오메가 스피드마스터 문워치", value: "/hero_pc_3.png" },
+  { label: "롤렉스 데이트저스트 126334", value: "/hero_watch_3.png" },
 ];
 
 export default function QCUploadPage() {
   const router = useRouter();
-  const [title, setTitle] = useState("");
+  
+  // 핵심 상태 변수
   const [category, setCategory] = useState<typeof CATEGORIES[number]>("시계");
   const [type, setType] = useState<typeof STATUS_TYPES[number]>("QC");
-  const [factory, setFactory] = useState("Clean Factory");
+  const [factory, setFactory] = useState("");
   const [model, setModel] = useState("");
-  const [price, setPrice] = useState("₩580");
+  const [price, setPrice] = useState(""); // 판매처 저장
   const [author, setAuthor] = useState("렙마스터");
   
-  // 페이크포인트 검사 정보
-  const [dialSpec, setDialSpec] = useState("정렬 양호, 인쇄 선명함");
-  const [bezelSpec, setBezelSpec] = useState("12시 방향 정렬 양호, 인서트 단차 없음");
-  const [rehautSpec, setRehautSpec] = useState("인그레이빙 대칭 양호");
-  const [datewheelSpec, setDatewheelSpec] = useState("날짜 정중앙 정렬");
-  const [claspSpec, setClaspSpec] = useState("버클 잠금 질감 양호, 글라스 투과율 높음");
+  // 체크박스 & 메모 상태 변수
+  const [selectedConcerns, setSelectedConcerns] = useState<string[]>([]);
+  const [memo, setMemo] = useState("");
   
   // 이미지
   const [imageType, setImageType] = useState<"preset" | "url">("preset");
@@ -42,22 +43,30 @@ export default function QCUploadPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  const concernsList = category === "시계" ? WATCH_CONCERNS : BAG_CONCERNS;
+
+  const handleCategoryChange = (cat: typeof CATEGORIES[number]) => {
+    setCategory(cat);
+    setSelectedConcerns([]);
+    setPresetImage(cat === "시계" ? "/hero_pc_1.png" : "/hero_bag_2.png");
+  };
+
+  const handleToggleConcern = (concern: string) => {
+    if (selectedConcerns.includes(concern)) {
+      setSelectedConcerns(selectedConcerns.filter((c) => c !== concern));
+    } else {
+      setSelectedConcerns([...selectedConcerns, concern]);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) {
-      setErrorMessage("제목을 입력해주세요.");
-      return;
-    }
     if (!model.trim()) {
-      setErrorMessage("상세 모델명을 입력해주세요.");
+      setErrorMessage("모델명을 입력해주세요.");
       return;
     }
     if (!factory.trim()) {
-      setErrorMessage("제조 공장명을 입력해주세요.");
-      return;
-    }
-    if (!author.trim()) {
-      setErrorMessage("작성자명을 입력해주세요.");
+      setErrorMessage("공장명을 입력해주세요.");
       return;
     }
 
@@ -76,13 +85,56 @@ export default function QCUploadPage() {
         }
       }
 
-      // ID 생성 (가장 큰 ID + 1000 혹은 기존 게시글에서 +1)
+      // ID 생성
       const nextId = currentPosts.length > 0 
         ? Math.max(...currentPosts.map((p: any) => p.id), ...QC_POSTS.map(p => p.id)) + 1 
         : Math.max(...QC_POSTS.map(p => p.id)) + 1;
 
       const finalImage = imageType === "preset" ? presetImage : customImageUrl.trim();
-      const imagesList = finalImage ? [finalImage] : ["/hero_pc_1.png"];
+      const imagesList = finalImage ? [finalImage] : [category === "시계" ? "/hero_pc_1.png" : "/hero_bag_2.png"];
+
+      // 자동 제목 생성
+      const finalTitle = `[검수요청] ${factory.trim()} ${model.trim()}`;
+
+      // 페이크포인트 스펙 자동 매핑 및 빌드
+      const getSpecValue = (concernKey: string, defaultDesc: string) => {
+        const isConcerned = selectedConcerns.includes(concernKey) || selectedConcerns.includes("전체 검수");
+        if (isConcerned) {
+          let val = `⚠️ [검수 요청] ${defaultDesc}`;
+          if (memo.trim()) {
+            val += ` (${memo.trim()})`;
+          }
+          return val;
+        }
+        return "양호 (정상 범위)";
+      };
+
+      let specs = {
+        dial: "",
+        bezel: "",
+        rehaut: "",
+        datewheel: "",
+        clasp: "",
+      };
+
+      if (category === "시계") {
+        specs = {
+          dial: getSpecValue("다이얼", "다이얼 및 핸즈 정렬 상태 체크 필요"),
+          bezel: getSpecValue("베젤", "베젤 인서트 및 마킹 대칭 상태 체크 필요"),
+          rehaut: getSpecValue("인덱스", "인덱스 정렬 및 대칭 상태 체크 필요"),
+          datewheel: getSpecValue("날짜창", "데이트휠 날짜 정렬 및 폰트 상태 체크 필요"),
+          clasp: getSpecValue("전체 검수", "버클 마감 및 글라스 투과율 체크 필요"),
+        };
+      } else {
+        // 가방
+        specs = {
+          dial: getSpecValue("로고/박임", "로고 각인 깊이 및 박임 상태 체크 필요"),
+          bezel: getSpecValue("가죽 질감", "가죽 가공 상태 및 질감 체크 필요"),
+          rehaut: getSpecValue("스티칭/대칭", "스티칭 선 정렬 및 대칭 균형 체크 필요"),
+          datewheel: getSpecValue("하드웨어/도금", "금속 부자재 도금 퀄리티 및 스크래치 체크 필요"),
+          clasp: getSpecValue("전체 검수", "가방 형태 및 내부 마감 처리 체크 필요"),
+        };
+      }
 
       // 새 QC 포스트 객체 생성
       const newPost = {
@@ -91,23 +143,17 @@ export default function QCUploadPage() {
         type,
         factory: factory.trim(),
         model: model.trim(),
-        title: title.trim(),
-        author: author.trim(),
-        avatar: author.trim().charAt(0) || "익",
+        title: finalTitle,
+        author: author.trim() || "렙마스터",
+        avatar: (author.trim() || "렙").charAt(0),
         views: 1,
         time: "방금 전",
-        price: price.trim(),
+        price: price.trim() || "미기재", // 판매처로 저장
         images: imagesList,
         glVotes: type === "GL" ? 1 : 0,
         rlVotes: type === "RL" ? 1 : 0,
         commentsCount: 0,
-        specs: {
-          dial: dialSpec.trim(),
-          bezel: bezelSpec.trim(),
-          rehaut: rehautSpec.trim(),
-          datewheel: datewheelSpec.trim(),
-          clasp: claspSpec.trim(),
-        },
+        specs,
         comments: []
       };
 
@@ -125,12 +171,12 @@ export default function QCUploadPage() {
 
   return (
     <div className="min-h-screen bg-black py-8">
-      <div className="max-w-[900px] mx-auto px-4">
+      <div className="max-w-[800px] mx-auto px-3 sm:px-4 py-6">
         
         {/* 뒤로가기 */}
         <div className="mb-4">
           <Link href="/qc" className="inline-flex items-center gap-2 text-xs font-bold text-zinc-500 hover:text-gold transition-colors">
-            <ArrowLeft size={14} /> QC 갤러리로 돌아가기
+            <ArrowLeft size={14} /> QC 투표로 돌아가기
           </Link>
         </div>
 
@@ -142,7 +188,7 @@ export default function QCUploadPage() {
             </div>
             <div>
               <h1 className="text-lg font-black text-white uppercase tracking-tight">QC 글쓰기</h1>
-              <p className="text-[10px] text-zinc-500 font-bold">공장에서 받은 검수 사진을 업로드하고, 커뮤니티의 검증을 받아보세요.</p>
+              <p className="text-[10px] text-zinc-500 font-bold">공장에서 받은 검수 사진을 업로드하고, 회원들의 검수 투표를 받아보세요.</p>
             </div>
           </div>
 
@@ -153,37 +199,65 @@ export default function QCUploadPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5 text-xs">
-            {/* 제목 */}
+            {/* 카테고리 선택 */}
             <div>
-              <label className="block text-zinc-400 font-bold mb-2">제목</label>
-              <input
-                type="text"
-                placeholder="예) [검수요청] Clean 데이토나 126500 흰판 스틸 인덱스 체크 부탁드립니다"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                maxLength={80}
-                className="w-full h-11 px-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 font-bold"
-              />
+              <label className="block text-zinc-400 font-bold mb-2">카테고리</label>
+              <div className="flex gap-1.5 flex-wrap">
+                {CATEGORIES.map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => handleCategoryChange(cat)}
+                    className={`px-4 py-2 text-[11px] sm:text-xs font-bold rounded-full transition-all duration-200 ${
+                      category === cat 
+                        ? "bg-gold text-black font-bold" 
+                        : "bg-white/[0.02] text-zinc-400 hover:bg-white/[0.05] hover:text-white border border-white/[0.04]"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* 분류 & 판정상태 */}
+            {/* 모델명 & 공장명 */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-zinc-400 font-bold mb-2">카테고리</label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value as any)}
-                  className="w-full h-11 px-4 bg-[#111111] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:border-gold/30 font-bold cursor-pointer"
-                >
-                  {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat} className="bg-[#111111] text-white">
-                      {cat}
-                    </option>
-                  ))}
-                </select>
+                <label className="block text-zinc-400 font-bold mb-2">모델명</label>
+                <input
+                  type="text"
+                  placeholder="예) 서브마리너 126610LN, 클래식 플랩백 등"
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  className="w-full h-11 px-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 font-bold"
+                />
               </div>
               <div>
-                <label className="block text-zinc-400 font-bold mb-2">현재 판정상태</label>
+                <label className="block text-zinc-400 font-bold mb-2">공장명</label>
+                <input
+                  type="text"
+                  placeholder="예) Clean, VSF, 187 등"
+                  value={factory}
+                  onChange={(e) => setFactory(e.target.value)}
+                  className="w-full h-11 px-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 font-bold"
+                />
+              </div>
+            </div>
+
+            {/* 판매처 & 판정상태 */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-zinc-400 font-bold mb-2">판매처 (선택)</label>
+                <input
+                  type="text"
+                  placeholder="예) Geek Time, Hont Watch, 국딜 등"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  className="w-full h-11 px-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 font-bold"
+                />
+              </div>
+              <div>
+                <label className="block text-zinc-400 font-bold mb-2">현재 의견</label>
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value as any)}
@@ -198,100 +272,47 @@ export default function QCUploadPage() {
               </div>
             </div>
 
-            {/* 공장 & 모델 & 가격 */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-zinc-400 font-bold mb-2">제조 공장명</label>
-                <input
-                  type="text"
-                  placeholder="예) Clean Factory, VSF"
-                  value={factory}
-                  onChange={(e) => setFactory(e.target.value)}
-                  className="w-full h-11 px-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 font-bold"
-                />
-              </div>
-              <div>
-                <label className="block text-zinc-400 font-bold mb-2">상세 모델명</label>
-                <input
-                  type="text"
-                  placeholder="예) 데이토나 126500"
-                  value={model}
-                  onChange={(e) => setModel(e.target.value)}
-                  className="w-full h-11 px-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 font-bold"
-                />
-              </div>
-              <div>
-                <label className="block text-zinc-400 font-bold mb-2">TD 출고 가격 / 닉네임</label>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="예) ₩780"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="w-full h-11 px-2.5 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 font-bold text-center"
-                  />
-                  <input
-                    type="text"
-                    value={author}
-                    onChange={(e) => setAuthor(e.target.value)}
-                    className="w-full h-11 px-2.5 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white focus:outline-none focus:border-gold/30 font-bold text-center"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* 📋 페이크포인트 검사 세부 사양 */}
+            {/* 📋 궁금한 점 체크박스 */}
             <div className="border border-white/[0.04] rounded-xl p-4 bg-white/[0.01] space-y-4">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-zinc-300 font-bold">페이크포인트 검사 정보 기입</span>
+              <div>
+                <label className="block text-zinc-300 font-bold mb-1">궁금한 점 (선택)</label>
+                <p className="text-[10px] text-zinc-500 font-bold">특히 신경 쓰이는 포인트를 선택해 주세요. 커뮤니티가 그 부분을 집중 분석해 줍니다.</p>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-zinc-500 font-bold mb-1.5">다이얼 &amp; 핸즈 사양</label>
-                  <input
-                    type="text"
-                    value={dialSpec}
-                    onChange={(e) => setDialSpec(e.target.value)}
-                    className="w-full h-10 px-3 bg-[#111111] border border-white/[0.08] rounded-xl text-zinc-300 focus:outline-none focus:border-gold/30 font-bold"
-                  />
-                </div>
-                <div>
-                  <label className="block text-zinc-500 font-bold mb-1.5">베젤 &amp; 인서트 사양</label>
-                  <input
-                    type="text"
-                    value={bezelSpec}
-                    onChange={(e) => setBezelSpec(e.target.value)}
-                    className="w-full h-10 px-3 bg-[#111111] border border-white/[0.08] rounded-xl text-zinc-300 focus:outline-none focus:border-gold/30 font-bold"
-                  />
-                </div>
-                <div>
-                  <label className="block text-zinc-500 font-bold mb-1.5">레하우 각인 사양</label>
-                  <input
-                    type="text"
-                    value={rehautSpec}
-                    onChange={(e) => setRehautSpec(e.target.value)}
-                    className="w-full h-10 px-3 bg-[#111111] border border-white/[0.08] rounded-xl text-zinc-300 focus:outline-none focus:border-gold/30 font-bold"
-                  />
-                </div>
-                <div>
-                  <label className="block text-zinc-500 font-bold mb-1.5">날짜창 (DW) 사양</label>
-                  <input
-                    type="text"
-                    value={datewheelSpec}
-                    onChange={(e) => setDatewheelSpec(e.target.value)}
-                    className="w-full h-10 px-3 bg-[#111111] border border-white/[0.08] rounded-xl text-zinc-300 focus:outline-none focus:border-gold/30 font-bold"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-zinc-500 font-bold mb-1.5">버클 &amp; 글라스 사양</label>
-                  <input
-                    type="text"
-                    value={claspSpec}
-                    onChange={(e) => setClaspSpec(e.target.value)}
-                    className="w-full h-10 px-3 bg-[#111111] border border-white/[0.08] rounded-xl text-zinc-300 focus:outline-none focus:border-gold/30 font-bold"
-                  />
-                </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {concernsList.map((item) => {
+                  const isChecked = selectedConcerns.includes(item);
+                  return (
+                    <button
+                      key={item}
+                      type="button"
+                      onClick={() => handleToggleConcern(item)}
+                      className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl border text-left font-bold transition-all ${
+                        isChecked
+                          ? "border-gold bg-gold/5 text-gold"
+                          : "border-white/[0.05] bg-white/[0.01] text-zinc-400 hover:bg-white/[0.03] hover:text-white"
+                      }`}
+                    >
+                      <div className={`w-4 h-4 rounded flex items-center justify-center border transition-all shrink-0 ${
+                        isChecked ? "border-gold bg-gold text-black" : "border-zinc-700"
+                      }`}>
+                        {isChecked && <Check size={10} strokeWidth={3} />}
+                      </div>
+                      <span className="text-[11px] font-bold">{item}</span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* 추가 메모 textarea */}
+              <div className="pt-2">
+                <label className="block text-zinc-500 font-bold mb-1.5">추가 메모 (선택)</label>
+                <textarea
+                  placeholder="예) 6시 방향 정렬 상태가 조금 삐뚤어져 보이는지 궁금합니다."
+                  value={memo}
+                  onChange={(e) => setMemo(e.target.value)}
+                  className="w-full h-20 p-3 bg-[#111111] border border-white/[0.08] rounded-xl text-zinc-300 placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 font-bold resize-none leading-relaxed"
+                />
               </div>
             </div>
 
@@ -299,7 +320,7 @@ export default function QCUploadPage() {
             <div className="border border-white/[0.04] rounded-xl p-4 bg-white/[0.01]">
               <div className="flex items-center gap-2 mb-2">
                 <ImageIcon size={14} className="text-gold" />
-                <span className="text-zinc-300 font-bold">QC 이미지 업로드 시뮬레이션</span>
+                <span className="text-zinc-300 font-bold">QC 이미지 업로드</span>
               </div>
               <p className="text-[10px] text-zinc-500 font-bold mb-4">
                 가상 환경이므로 목업 이미지를 선택하거나 직접 사진 URL을 첨부할 수 있습니다.
@@ -316,7 +337,7 @@ export default function QCUploadPage() {
                       : "bg-white/[0.02] text-zinc-500 border-white/[0.04] hover:text-white"
                   }`}
                 >
-                  목업 이미지 샘플 선택
+                  샘플 이미지 선택
                 </button>
                 <button
                   type="button"
@@ -352,7 +373,7 @@ export default function QCUploadPage() {
                   </div>
 
                   {presetImage && (
-                    <div className="mt-4 max-w-xs rounded-lg overflow-hidden border border-white/[0.08] bg-zinc-900">
+                    <div className="mt-4 max-w-xs rounded-lg overflow-hidden border border-white/[0.08] bg-zinc-950">
                       <img src={presetImage} alt="미리보기" className="w-full h-auto object-cover" />
                     </div>
                   )}
@@ -367,7 +388,7 @@ export default function QCUploadPage() {
                     className="w-full h-11 px-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 font-bold"
                   />
                   {customImageUrl.trim() && (
-                    <div className="mt-4 max-w-xs rounded-lg overflow-hidden border border-white/[0.08] bg-zinc-900">
+                    <div className="mt-4 max-w-xs rounded-lg overflow-hidden border border-white/[0.08] bg-zinc-950">
                       <img 
                         src={customImageUrl.trim()} 
                         alt="입력한 이미지 미리보기" 
