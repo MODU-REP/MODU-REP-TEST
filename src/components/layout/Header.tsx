@@ -41,7 +41,7 @@ export function Header() {
                 alt="MODUREP 모두의 렙"
                 width={240}
                 height={94}
-                className="h-[22px] sm:h-[25px] lg:h-[32px] w-auto object-contain"
+                className="h-[26px] sm:h-[28px] lg:h-[32px] w-auto object-contain"
                 priority
               />
             </Link>

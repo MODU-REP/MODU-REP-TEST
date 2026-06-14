@@ -3,9 +3,9 @@ import Image from "next/image";
 
 export function Footer() {
   return (
-    <footer className="hidden lg:block border-t border-white/[0.06] bg-[#080808]">
-      <div className="max-w-[1400px] mx-auto px-6 py-12">
-        <div className="grid grid-cols-4 gap-8">
+    <footer className="border-t border-white/[0.06] bg-[#080808] pb-24 lg:pb-0">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <div className="mb-4">
               <Image
@@ -13,7 +13,7 @@ export function Footer() {
                 alt="MODUREP 모두의 렙"
                 width={260}
                 height={102}
-                className="h-13 w-auto object-contain"
+                className="h-[42px] sm:h-[52px] w-auto object-contain"
               />
             </div>
             <p className="text-sm text-zinc-500 leading-relaxed">
