@@ -273,7 +273,7 @@ export default function QCUploadPage() {
                 <label className="block text-zinc-400 font-bold mb-2">판매처 (선택)</label>
                 <input
                   type="text"
-                  placeholder="예) Geek Time, Hont Watch, 국딜 등"
+                  placeholder="예) 모두의 렙, 인스타 셀러, 번개장터, 타 사이트, 해외 TD 등"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   className="w-full h-11 px-4 bg-white/[0.03] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 focus:outline-none focus:border-gold/30 font-bold"
