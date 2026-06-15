@@ -59,6 +59,28 @@ export default function QCUploadPage() {
     }
   };
 
+  const getConcernGuide = (name: string) => {
+    if (category === "시계") {
+      switch (name) {
+        case "인덱스": return "12시 방향 왕관/더블바 마커 정렬 상태, 각 아워 마커 인덱스의 수평도 및 부착 유격 체크";
+        case "베젤": return "세라믹 인서트 음각 플래티넘 도금의 균일도, 12시 방향 역삼각 야광점 정중앙 정렬 체크";
+        case "날짜창": return "데이트휠 인쇄 폰트 두께 및 번짐 상태, 날짜 창 숫자의 좌우/상하 센터링 정렬 체크";
+        case "다이얼": return "다이얼 인쇄 텍스트 정밀도(로고 및 왕관), 핸즈 정렬 상태, 인덱스 야광 도포 균일성 체크";
+        case "전체 검수": return "사파이어 글라스 투과율 및 단차, 브레이슬릿 엔드링크(SEL) 유격, 버클 결합 및 각인 마감 체크";
+        default: return "";
+      }
+    } else {
+      switch (name) {
+        case "로고/박임": return "엠보싱 로고 철자 정밀도 및 자간 간격, 금박/은박 각인의 번짐 상태 및 수평 정렬 체크";
+        case "스티칭/대칭": return "다이아몬드 퀼팅/패턴 정밀 대칭, 스티치 바느질의 일정한 간격 및 기리메 마감 체크";
+        case "가죽 질감": return "가죽 표면 광택도 및 고유 모공/질감 구현도, 패턴 대칭 구조 체크";
+        case "하드웨어/도금": return "체인 및 잠금 장치 금속의 도금 톤(색감), 정각인 상태 및 버클 스크래치 체크";
+        case "전체 검수": return "가방 전체 쉐입(형태) 좌우 대칭, 플랩 내부 안감 정돈 및 가죽 절개부 마감 처리 체크";
+        default: return "";
+      }
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!model.trim()) {
@@ -303,6 +325,22 @@ export default function QCUploadPage() {
                   );
                 })}
               </div>
+
+              {/* 실시간 가이드라인 표시 */}
+              {selectedConcerns.length > 0 && (
+                <div className="p-3.5 bg-white/[0.02] border border-white/[0.06] rounded-xl space-y-2">
+                  <span className="text-[10px] text-zinc-500 font-bold block mb-1">선택 부위별 검수 기준 가이드:</span>
+                  {selectedConcerns.map((concernName) => {
+                    const guideText = getConcernGuide(concernName);
+                    return (
+                      <div key={concernName} className="text-[11px] leading-relaxed text-zinc-400">
+                        <span className="text-gold font-bold mr-1.5">• {concernName}:</span>
+                        {guideText}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
 
               {/* 추가 메모 textarea */}
               <div className="pt-2">
