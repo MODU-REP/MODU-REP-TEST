@@ -119,20 +119,20 @@ export default function QCUploadPage() {
 
       if (category === "시계") {
         specs = {
-          dial: getSpecValue("다이얼", "다이얼 및 핸즈 정렬 상태 체크 필요"),
-          bezel: getSpecValue("베젤", "베젤 인서트 및 마킹 대칭 상태 체크 필요"),
-          rehaut: getSpecValue("인덱스", "인덱스 정렬 및 대칭 상태 체크 필요"),
-          datewheel: getSpecValue("날짜창", "데이트휠 날짜 정렬 및 폰트 상태 체크 필요"),
-          clasp: getSpecValue("전체 검수", "버클 마감 및 글라스 투과율 체크 필요"),
+          dial: getSpecValue("다이얼", "다이얼 인쇄 텍스트 정밀도(로고 및 왕관), 핸즈 정렬 상태, 인덱스 야광 도포 균일성 체크"),
+          bezel: getSpecValue("베젤", "세라믹 인서트 음각 플래티넘 도금의 균일도, 12시 방향 역삼각 야광점 정중앙 정렬 체크"),
+          rehaut: getSpecValue("인덱스", "12시 방향 왕관/더블바 마커 정렬 상태, 각 아워 마커 인덱스의 수평도 및 부착 유격 체크"),
+          datewheel: getSpecValue("날짜창", "데이트휠 인쇄 폰트 두께 및 번짐 상태, 날짜 창 숫자의 좌우/상하 센터링 정렬 체크"),
+          clasp: getSpecValue("전체 검수", "사파이어 글라스 투과율 및 단차, 브레이슬릿 엔드링크(SEL) 유격, 버클 결합 및 각인 마감 체크"),
         };
       } else {
         // 가방
         specs = {
-          dial: getSpecValue("로고/박임", "로고 각인 깊이 및 박임 상태 체크 필요"),
-          bezel: getSpecValue("가죽 질감", "가죽 가공 상태 및 질감 체크 필요"),
-          rehaut: getSpecValue("스티칭/대칭", "스티칭 선 정렬 및 대칭 균형 체크 필요"),
-          datewheel: getSpecValue("하드웨어/도금", "금속 부자재 도금 퀄리티 및 스크래치 체크 필요"),
-          clasp: getSpecValue("전체 검수", "가방 형태 및 내부 마감 처리 체크 필요"),
+          dial: getSpecValue("로고/박임", "엠보싱 로고 철자 정밀도 및 자간 간격, 금박/은박 각인의 번짐 상태 및 수평 정렬 체크"),
+          bezel: getSpecValue("가죽 질감", "가죽 표면 광택도 및 고유 모공/질감 구현도, 패턴 대칭 구조 체크"),
+          rehaut: getSpecValue("스티칭/대칭", "다이아몬드 퀼팅/패턴 정밀 대칭, 스티치 바느질의 일정한 간격 및 기리메 마감 체크"),
+          datewheel: getSpecValue("하드웨어/도금", "체인 및 잠금 장치 금속의 도금 톤(색감), 정각인 상태 및 버클 스크래치 체크"),
+          clasp: getSpecValue("전체 검수", "가방 전체 쉐입(형태) 좌우 대칭, 플랩 내부 안감 정돈 및 가죽 절개부 마감 처리 체크"),
         };
       }
 
