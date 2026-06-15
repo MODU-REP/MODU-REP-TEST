@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Camera, Eye, Search, CheckCircle2, XCircle, HelpCircle } from "lucide-react";
+import { Camera, Eye, Search, CheckCircle2, XCircle, HelpCircle, ShieldCheck, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { QC_POSTS } from "@/lib/data";
 
@@ -54,6 +54,30 @@ export default function QCPage() {
             </p>
           </div>
         </div>
+
+        {/* Purchase Guide Banner */}
+        <Link 
+          href="/community?tab=구매 가이드"
+          className="block mb-6 relative overflow-hidden rounded-xl border border-gold/20 bg-gradient-to-r from-gold/10 via-gold/5 to-transparent p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 group hover:border-gold/40 transition-all duration-300"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center text-gold group-hover:scale-105 transition-transform shrink-0">
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <h4 className="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
+                안전하고 확실한 렙 입문! 모두의 렙 안심 구매 가이드
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-gold/20 text-gold border border-gold/30 font-black animate-pulse">필독</span>
+              </h4>
+              <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5 font-medium">
+                실패 없는 안전결제 신청부터 항공 직배송, 48시간 실물 검수 진행 방식을 설명해 드립니다.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center text-xs text-gold font-bold gap-1 self-end sm:self-auto group-hover:translate-x-1 transition-transform">
+            가이드 보기 <ChevronRight size={14} />
+          </div>
+        </Link>
 
         {/* Filter controls */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6 border-b border-white/[0.04] pb-4">

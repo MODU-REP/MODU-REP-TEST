@@ -72,6 +72,13 @@ export default function CommunityPage() {
       localStorage.setItem("community_posts", JSON.stringify(COMMUNITY_POSTS));
       setPosts(COMMUNITY_POSTS);
     }
+
+    // URL 쿼리 파라미터 연동
+    const params = new URLSearchParams(window.location.search);
+    const tabParam = params.get("tab");
+    if (tabParam && TABS.includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
   }, []);
 
   // 검색 제출 핸들러
@@ -120,6 +127,30 @@ export default function CommunityPage() {
         <div className="mb-6 border-b border-white/[0.05] pb-4">
           <h1 className="text-2xl font-black tracking-tight text-white uppercase">커뮤니티</h1>
           <p className="text-xs sm:text-sm text-zinc-500 mt-1 font-bold">공장별 렙 분석 정보, 후기, 세관/배송 고민 등 레플리카 매니아들의 은밀한 대화방.</p>
+        </div>
+
+        {/* Purchase Guide Banner */}
+        <div 
+          onClick={() => setActiveTab("구매 가이드")}
+          className="cursor-pointer mb-5 relative overflow-hidden rounded-xl border border-gold/20 bg-gradient-to-r from-gold/10 via-gold/5 to-transparent p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 group hover:border-gold/40 transition-all duration-300"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gold/10 flex items-center justify-center text-gold group-hover:scale-105 transition-transform shrink-0">
+              <ShieldCheck size={20} />
+            </div>
+            <div>
+              <h4 className="text-xs sm:text-sm font-black text-white flex items-center gap-1.5">
+                사기 피해 0% 보장! 모두의 렙 안심 구매 가이드
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-gold/20 text-gold border border-gold/30 font-black animate-pulse">필독</span>
+              </h4>
+              <p className="text-[10px] sm:text-xs text-zinc-400 mt-0.5 font-medium">
+                안전결제 대금 보관부터 1:1 항공 특송, 48시간 실물 안심 검수까지 전 과정을 한눈에 확인하세요.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center text-xs text-gold font-bold gap-1 self-end sm:self-auto group-hover:translate-x-1 transition-transform">
+            가이드 보기 <ChevronRight size={14} />
+          </div>
         </div>
 
         {/* Notices */}
@@ -465,6 +496,29 @@ export default function CommunityPage() {
           {/* Sidebar */}
           <aside className="hidden lg:block space-y-4">
             
+            {/* Purchase Guide Sidebar Widget */}
+            <div 
+              onClick={() => {
+                setActiveTab("구매 가이드");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="glass rounded-xl p-4 border border-gold/20 bg-gradient-to-b from-gold/10 to-transparent cursor-pointer group hover:border-gold/40 transition-all duration-300"
+            >
+              <div className="flex items-center gap-2 mb-2 text-white">
+                <ShieldCheck size={16} className="text-gold animate-pulse" />
+                <h3 className="text-xs font-black uppercase tracking-wide">
+                  렙 초보 안심 구매 가이드
+                </h3>
+              </div>
+              <p className="text-[10px] text-zinc-400 font-semibold leading-relaxed">
+                먹튀 사기 0%, 항공 직배송, 수령 후 48시간 실물 안심 검수제도! 모두의 렙만의 특화된 구매 여정을 안내합니다.
+              </p>
+              <div className="mt-3 flex items-center justify-between text-[9px] font-black text-gold uppercase tracking-wider">
+                <span>가이드 자세히 보기</span>
+                <ChevronRight size={10} className="group-hover:translate-x-0.5 transition-transform" />
+              </div>
+            </div>
+
             <div className="glass rounded-xl p-4 border border-white/[0.05] bg-[#111111]/30">
               <h3 className="text-xs font-black mb-3 flex items-center gap-1.5 uppercase tracking-wide text-white">
                 <TrendingUp size={14} className="text-gold" /> 실시간 인기 글
