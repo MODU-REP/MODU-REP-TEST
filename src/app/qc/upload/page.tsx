@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Camera, Image as ImageIcon, Check } from "lucide-react";
+import { ArrowLeft, Camera, Image as ImageIcon, Check, HelpCircle } from "lucide-react";
 import { QC_POSTS } from "@/lib/data";
 
 const CATEGORIES = ["시계", "가방"] as const;
@@ -193,7 +193,7 @@ export default function QCUploadPage() {
 
   return (
     <div className="min-h-screen bg-black py-8">
-      <div className="max-w-[800px] mx-auto px-3 sm:px-4 py-6">
+      <div className="max-w-[1100px] mx-auto px-3 sm:px-4 py-6">
         
         {/* 뒤로가기 */}
         <div className="mb-4">
@@ -202,8 +202,9 @@ export default function QCUploadPage() {
           </Link>
         </div>
 
-        {/* 글쓰기 카드 */}
-        <div className="glass rounded-2xl p-6 sm:p-8 border border-white/[0.05] bg-[#111111]/30">
+        <div className="grid lg:grid-cols-[1fr_350px] gap-6 items-start">
+          {/* 글쓰기 카드 (좌측 칼럼) */}
+          <div className="glass rounded-2xl p-6 sm:p-8 border border-white/[0.05] bg-[#111111]/30">
           <div className="flex items-center gap-2 mb-6 border-b border-white/[0.05] pb-4">
             <div className="w-8 h-8 rounded-lg bg-gold/15 flex items-center justify-center text-gold">
               <Camera size={16} />
@@ -342,6 +343,26 @@ export default function QCUploadPage() {
                 </div>
               )}
 
+              {/* 모바일/태블릿용 가이드라인 아코디언 */}
+              <div className="lg:hidden">
+                <details className="group border border-white/[0.05] bg-white/[0.01] rounded-xl overflow-hidden transition-all">
+                  <summary className="flex items-center justify-between px-3.5 py-2.5 text-[10px] font-black text-zinc-400 cursor-pointer hover:bg-white/[0.02] select-none">
+                    <span className="flex items-center gap-1.5">
+                      <HelpCircle size={12} className="text-gold" />
+                      부위별 용어 가이드 보기 ({category})
+                    </span>
+                    <span className="text-gold group-open:rotate-180 transition-transform">▼</span>
+                  </summary>
+                  <div className="p-3 border-t border-white/[0.04] bg-zinc-950/40">
+                    <img 
+                      src={category === "시계" ? "/watch_parts_guide.png" : "/bag_parts_guide.png"} 
+                      alt={`${category} 용어 가이드`} 
+                      className="w-full h-auto rounded-lg border border-white/[0.04]" 
+                    />
+                  </div>
+                </details>
+              </div>
+
               {/* 추가 메모 textarea */}
               <div className="pt-2">
                 <label className="block text-zinc-500 font-bold mb-1.5">추가 메모 (선택)</label>
@@ -460,7 +481,26 @@ export default function QCUploadPage() {
           </form>
         </div>
 
+        {/* 우측 칼럼: 부위별 용어 가이드 카드 (데스크톱 전용) */}
+        <div className="hidden lg:block glass rounded-2xl p-5 border border-white/[0.05] bg-[#111111]/30 sticky top-6">
+          <h3 className="text-xs font-black uppercase tracking-wider text-white mb-2 flex items-center gap-1.5">
+            <HelpCircle size={14} className="text-gold" />
+            부위별 용어 가이드 ({category})
+          </h3>
+          <p className="text-[10px] text-zinc-500 font-bold mb-4 leading-normal">
+            시계/가방의 검수 용어 위치가 헷갈린다면 아래 가이드를 참고하세요.
+          </p>
+          <div className="rounded-xl overflow-hidden border border-white/[0.08] bg-zinc-950">
+            <img 
+              src={category === "시계" ? "/watch_parts_guide.png" : "/bag_parts_guide.png"} 
+              alt={`${category} 용어 가이드`} 
+              className="w-full h-auto object-cover" 
+            />
+          </div>
+        </div>
+
       </div>
     </div>
+  </div>
   );
 }
